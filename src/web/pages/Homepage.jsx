@@ -1,12 +1,14 @@
 import React from 'react'
 import Auctioncard from '../components/ui/Auctioncard'
 import heroimg from "../../assets/web/heroimg.png"
+import seccar from "../../assets/web/seccar.png"
 import car1 from "../../assets/web/car1.png"
 import car2 from "../../assets/web/car2.png"
 import icon1 from "../../assets/web/icon1.png"
 import icon2 from "../../assets/web/icon2.png"
 import icon3 from "../../assets/web/icon3.png"
 import StoriesSlider from "../components/slider"
+import FAQ from "../components/faq"
 
 const Homepage = () => {
 
@@ -123,6 +125,39 @@ const Homepage = () => {
                 <div className='w-full bg-white mb-[50px] flex gap-5 flex-col justify-center items-center'>
                     <h2 className='text-center mt-[50px] font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>Deal Car Success Stories</h2>
                     <StoriesSlider />
+                </div>
+
+                <div className="w-full relative min-h-screen flex flex-col justify-center items-end bg-[#C8C8C8] mb-12 lg:mb-[50px] p-5 lg:p-10">
+                    <img className="absolute h-full top-0 left-0 object-cover w-full lg:w-auto" src={seccar} alt="Car" />
+                    <div className="relative lg:w-[50%] flex flex-col justify-center items-start gap-5 bg-white bg-opacity-70 p-5 lg:p-10 rounded-lg shadow-lg">
+                        <h2 className="text-[#FFA90A] font-semibold text-lg lg:text-[30px] md:text-[25px]">About Us</h2>
+                        <h2 className="font-bold md:leading-[50px] text-xl lg:text-[40px] md:text-[30px]">Revving The Future: Your Ultimate Auction Car Destination</h2>
+                        <p className="font-semibold text-sm lg:text-base">Lorem ipsum dolor sit amet consectetur. Gravida mi mauris arcu sed. Adipiscing mollis velit lacus posuere varius leo. Pellentesque tincidunt convallis pretium duis eu pretium sagittis nunc velit. Ullamcorper phasellus nisl mauris cras euismod.</p>
+                        <ul className="list-disc pl-5">
+                            <li className="text-sm lg:text-base">
+                                Diverse Inventory: Explore a wide range of vehicles, each meticulously.
+                            </li>
+                            <li className="text-sm lg:text-base">
+                                Live Auctions: Immerse yourself in the excitement of real-time bidding.
+                            </li>
+                            <li className="text-sm lg:text-base">
+                                Transparency: We believe in openness and provide detailed information.
+                            </li>
+                            <li className="text-sm lg:text-base">
+                                User-Friendly Platform: Navigate effortlessly through our website.
+                            </li>
+                            <li className="text-sm lg:text-base">
+                                Secure Transactions: Bid with confidence, knowing that your transactions are secure.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className='w-full flex flex-col justify-center items-center gap-5'>
+                    <h2 className='text-center mt-[30px] mb-[10px] font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>FAQs About Selling Cars</h2>
+                    <div className='md:w-[70%] w-[90%] mb-[30px] flex flex-col justify-center items-center'>
+                        <FAQ />
+                    </div>
                 </div>
 
             </div>

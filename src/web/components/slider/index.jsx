@@ -88,7 +88,7 @@ function index() {
         <div className="slider-container !max-w-[360px] sm:!max-w-[360px] md:!max-w-[700px] lg:!max-w-[1000px] xl:!max-w-[1180px]">
             <Slider {...settings}>
                 {storiesData && storiesData?.map((story, index) => (
-                    <div>
+                    <div key={index}>
                         <Storiescard key={index} image={story.image} say={story.say} />
                     </div>
                 ))}
