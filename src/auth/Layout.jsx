@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom'
-import { useAuth } from "../AuthContext";
-import Footer from '../src/web/components/Footer';
-import Header from '../src/web/components/Header';
+import { useAuth } from "../../AuthContext";
+import Footer from '../web/components/Footer';
+import Header from '../web/components/Header';
 
 const Loader = () => {
     return (

@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import logo from "../../assets/Logo.png"
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../../AuthContext';
 
 const Header = () => {
+    const { logout, currentUser, userType } = useAuth()
     const [openHam, setOpenHam] = useState(false);
     const toggleHam = () => {
         setOpenHam(!openHam)
@@ -16,9 +18,21 @@ const Header = () => {
                     </p>
                     <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
 
-                        <Link className='w-full' to="/auth/signup">
-                            <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Signup</button>
-                        </Link>
+                        {!currentUser ? (
+                            <Link className='w-full' to="/auth/signup">
+                                <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Signup</button>
+                            </Link>
+                        ) : (
+                            userType === "user" ? (
+                                <Link className='w-full' to="/user_portal">
+                                    <button className="text-white flex flex-col justify-center items-center bg-[#4a9024] outline-none font-medium rounded-lg text-sm px-4 py-2">User Portal</button>
+                                </Link>
+                            ) : (
+                                <Link className='w-full' to="/admin_portal">
+                                    <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Admin Portal</button>
+                                </Link>
+                            )
+                        )}
 
                         <button onClick={toggleHam} data-collapse-toggle="navbar-cta" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-cta" aria-expanded="false">
                             <span className="sr-only">Open main menu</span>
