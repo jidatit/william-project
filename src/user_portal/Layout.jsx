@@ -1,6 +1,9 @@
 import React from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
 import { useAuth } from '../../AuthContext'
+import Header from '../web/components/Header';
+import Footer from '../web/components/Footer';
+import TopBar from './components/TopBar';
 
 const Loader = () => {
     return (
@@ -17,8 +20,11 @@ const Layout = () => {
     }
     return (
         currentUser && userType !== "admin" ? (<>
-            <div className='w-full flex flex-col justify-start items-center'>
+            <div className='w-full bg-[#F4F4F4] flex flex-col justify-start items-center'>
+                <Header />
+                <TopBar />
                 <Outlet />
+                <Footer />
             </div>
         </>) : (
             <>
