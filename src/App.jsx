@@ -11,6 +11,8 @@ import UserDashboard from "./user_portal/pages/Dashboard"
 import AdminLogin from './auth/AdminLogin'
 import { useAuth } from '../AuthContext'
 import Users from './admin_portal/pages/Users'
+import CarDetails from './web/pages/CarDetails'
+import CarListing from './web/pages/CarListing'
 
 function App() {
 
@@ -27,6 +29,9 @@ function App() {
 
           <Route path='/' element={<WebLayout />}>
             <Route index element={<Homepage />} />
+            <Route path="car-listing" element={<CarListing />} />
+            <Route path="car-details/:id" element={<CarDetails />} />
+
           </Route>
 
           <Route path='/admin_portal' element={<AdminLayout />}>
