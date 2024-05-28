@@ -30,7 +30,7 @@ const TopBar = () => {
                     <p className='font-light text-sm'>Member Since May 6th, 2024</p>
                 </div>
             </div>
-            <div className='w-full shadow-xl rounded-md bg-white grid grid-cols-5'>
+            <div className='w-full shadow-xl rounded-md bg-white grid lg:grid-cols-5'>
                 {pages.map((page, index) => (
                     <Link key={index} to={page.path}>
                         <div className={`${getButtonClasses(page.path)} ${index === 0 ? 'rounded-l-md' : ''} ${index === pages.length - 1 ? 'rounded-r-md' : ''}`}>

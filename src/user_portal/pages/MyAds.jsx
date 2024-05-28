@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
 import AdCard from '../components/ui/AdCard'
-import { Modal, TextField } from '@mui/material'
+import { Modal, TextField, InputLabel, Select, MenuItem, FormControl } from '@mui/material'
 import Button from "../components/ui/Button"
-import { useAuth } from '../../../AuthContext'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { db, storage } from "../../../db"
+import { addDoc, collection } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from '@firebase/storage';
+import { useAuth } from "../../../AuthContext"
 
 const MyAds = () => {
-    const { logout } = useAuth()
+    const { currentUser } = useAuth()
     const [buttonText, setButtonText] = useState("Submit");
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -20,16 +25,15 @@ const MyAds = () => {
         address: "",
         mileage_km: "",
         body_color: "",
-        transaction_type: "",
         price: "",
         description: "",
         engine_type: "",
         engine_capacity: "",
         transmission: "",
         user: {
-            fullname: "",
-            email: "",
-            phoneNumber: ""
+            // fullname: "",
+            // email: "",
+            // phoneNumber: ""
         }
     });
 
@@ -63,22 +67,65 @@ const MyAds = () => {
         }));
     };
 
+    const createAd = async () => {
+        try {
+            setButtonText("Submitting...")
+            if (formData.images.length === 0) {
+                toast.warn("Upload any image(s)!");
+                setButtonText("Submit")
+                handleClose();
+                return;
+            }
+
+            const timestamp = Date.now();
+            const uniqueId = Math.random().toString(36).substring(2);
+
+            const promises = formData.images.map(async (file) => {
+                const storageRef = ref(storage, `Ads/${timestamp}_${uniqueId}_${file.name}`);
+                await uploadBytes(storageRef, file);
+                return getDownloadURL(storageRef);
+            });
+
+            const fileUrls = await Promise.all(promises);
+
+            const formDataWithUrls = {
+                ...formData,
+                images: fileUrls.map(url => ({ file: url })),
+                user: {
+                    ...currentUser.data,
+                    uid: currentUser.uid
+                }
+            };
+            delete formDataWithUrls.imagePreviews
+            await addDoc(collection(db, 'Ads'), formDataWithUrls);
+
+            toast.success("Ad created with success!");
+            setButtonText("Submit")
+            handleClose();
+        } catch (error) {
+            console.error("Error creating Ad:", error);
+            toast.error("Error creating Ad!");
+            setButtonText("Submit")
+            handleClose();
+        }
+    };
+
     return (
         <>
             <div className='w-[80%] min-h-screen flex flex-col justify-start items-center'>
-                
+                <ToastContainer />
                 <div className='w-full mt-[20px] mb-[20px] flex flex-col justify-center items-start'>
-                    <div onClick={handleOpen} className='md:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#FFA90A] hover:text-white rounded-[30px] border-[2px] border-[#FFA90A] text-[#FFA90A] font-semibold p-3'>
+                    <div onClick={handleOpen} className='lg:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#FFA90A] hover:text-white rounded-[30px] border-[2px] border-[#FFA90A] text-[#FFA90A] font-semibold p-3'>
                         <p className='text-center'>Create an Ad</p>
                     </div>
                 </div>
 
                 <div className='w-full mt-[20px] mb-[20px] flex flex-col justify-center items-center'>
                     <div className='flex w-full flex-col lg:flex-row gap-2'>
-                        <div className='md:w-[20%] w-full rounded-[30px] cursor-pointer bg-[#FFA90A] text-white font-semibold p-3'>
+                        <div className='lg:w-[20%] w-full rounded-[30px] cursor-pointer bg-[#FFA90A] text-white font-semibold p-3'>
                             <p className='text-center'>Active</p>
                         </div>
-                        <div className='md:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#FFA90A] hover:text-white rounded-[30px] border-[2px] border-[#FFA90A] text-[#FFA90A] font-semibold p-3'>
+                        <div className='lg:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#FFA90A] hover:text-white rounded-[30px] border-[2px] border-[#FFA90A] text-[#FFA90A] font-semibold p-3'>
                             <p className='text-center'>Removed</p>
                         </div>
                     </div>
@@ -130,19 +177,46 @@ const MyAds = () => {
                         <TextField required label="Address" type="text" onChange={handleChange} name="address" value={formData.address} className="w-[70%]" />
                         <TextField required label="Mileage (km)" type="text" onChange={handleChange} name="mileage_km" value={formData.mileage_km} className="w-[70%]" />
                         <TextField required label="Body Color" type="text" onChange={handleChange} name="body_color" value={formData.body_color} className="w-[70%]" />
-                        <TextField required label="Transaction Type" type="text" onChange={handleChange} name="transaction_type" value={formData.transaction_type} className="w-[70%]" />
-                        <TextField required label="Price" type="text" onChange={handleChange} name="price" value={formData.price} className="w-[70%]" />
-                        <TextField required label="Description" type="text" onChange={handleChange} name="description" value={formData.description} className="w-[70%]" />
-                        <TextField required label="Engine Type" type="text" onChange={handleChange} name="engine_type" value={formData.engine_type} className="w-[70%]" />
+                        <TextField required label="Price" type="number" onChange={handleChange} name="price" value={formData.price} className="w-[70%]" />
+                        <TextField required label="Description" multiline rows={5} type="text" onChange={handleChange} name="description" value={formData.description} className="w-[70%]" />
+
+                        <FormControl required className="w-[70%]">
+                            <InputLabel>Engine Type</InputLabel>
+                            <Select
+                                label="Engine Type"
+                                onChange={handleChange}
+                                name="engine_type"
+                                value={formData.engine_type}
+                            >
+                                <MenuItem value="Hybrid">Hybrid</MenuItem>
+                                <MenuItem value="Diesel">Diesel</MenuItem>
+                                <MenuItem value="CNG">CNG</MenuItem>
+                                <MenuItem value="Petrol">Petrol</MenuItem>
+                            </Select>
+                        </FormControl>
+
                         <TextField required label="Engine Capacity" type="text" onChange={handleChange} name="engine_capacity" value={formData.engine_capacity} className="w-[70%]" />
-                        <TextField required label="Transmission" type="text" onChange={handleChange} name="transmission" value={formData.transmission} className="w-[70%]" />
-                        <TextField required label="Full Name" type="text" onChange={handleChange} name="user.fullname" value={formData.user.fullname} className="w-[70%]" />
+
+                        <FormControl required className="w-[70%]">
+                            <InputLabel>Transmission</InputLabel>
+                            <Select
+                                label="Transmission"
+                                onChange={handleChange}
+                                name="transmission"
+                                value={formData.transmission}
+                            >
+                                <MenuItem value="Automatic">Automatic</MenuItem>
+                                <MenuItem value="Manual">Manual</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        {/* <TextField required label="Full Name" type="text" onChange={handleChange} name="user.fullname" value={formData.user.fullname} className="w-[70%]" />
                         <TextField required label="Email" type="text" onChange={handleChange} name="user.email" value={formData.user.email} className="w-[70%]" />
-                        <TextField required label="Phone Number" type="text" onChange={handleChange} name="user.phoneNumber" value={formData.user.phoneNumber} className="w-[70%]" />
+                        <TextField required label="Phone Number" type="text" onChange={handleChange} name="user.phoneNumber" value={formData.user.phoneNumber} className="w-[70%]" /> */}
 
                         <div className="w-[90%] mb-5 flex flex-col justify-end items-end">
                             <div className="md:w-[30%] w-full pr-0 md:pr-2">
-                                <Button onClickProp={() => console.log(formData)} text={buttonText} />
+                                <Button onClickProp={createAd} text={buttonText} />
                             </div>
                         </div>
                     </div>
