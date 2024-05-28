@@ -1,16 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AdCard from '../components/ui/AdCard'
 import { Modal, TextField, InputLabel, Select, MenuItem, FormControl } from '@mui/material'
 import Button from "../components/ui/Button"
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { db, storage } from "../../../db"
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from '@firebase/storage';
 import { useAuth } from "../../../AuthContext"
 
 const MyAds = () => {
     const { currentUser } = useAuth()
+    const [MyAds, setMyAds] = useState([]);
     const [buttonText, setButtonText] = useState("Submit");
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -19,6 +20,7 @@ const MyAds = () => {
     const [formData, setFormData] = useState({
         images: [],
         imagePreviews: [],
+        model_name: "",
         model_year: "",
         registered_in: "",
         location: "",
@@ -110,6 +112,22 @@ const MyAds = () => {
         }
     };
 
+    const fetchMyAds = async () => {
+        let allQts = []
+        const Adsref = collection(db, 'Ads');
+        const q = query(Adsref, where("user.uid", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            allQts.push({ id: doc.id, ...doc.data() });
+        });
+        setMyAds(allQts)
+        console.log(allQts)
+    }
+
+    useEffect(() => {
+        fetchMyAds()
+    }, [])
+
     return (
         <>
             <div className='w-[80%] min-h-screen flex flex-col justify-start items-center'>
@@ -132,11 +150,9 @@ const MyAds = () => {
                 </div>
 
                 <div className='w-full flex flex-col mb-[50px] justify-center items-center gap-3'>
-                    <AdCard />
-                    <AdCard />
-                    <AdCard />
-                    <AdCard />
-                    <AdCard />
+                    {MyAds && MyAds.map((ad, index) => (
+                        <AdCard key={index} data={ad} />
+                    ))}
                 </div>
 
                 <Modal
@@ -154,7 +170,7 @@ const MyAds = () => {
                         <h3 className='font-bold md:text-[24px] text-[15px] text-center'>Create an Ad</h3>
 
                         <div className="file_upload w-[70%] p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
-                            <svg className="text-indigo-500 w-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                            <svg className="text-indigo-500 w-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                             <div className="input_field flex flex-col w-max mx-auto text-center">
                                 <label>
                                     <input className="text-sm cursor-pointer w-36 hidden" type="file" multiple onChange={handleImageChange} />
@@ -171,6 +187,7 @@ const MyAds = () => {
                             ))}
                         </div>
 
+                        <TextField required label="Model Name" type="text" onChange={handleChange} name="model_name" value={formData.model_name} className="w-[70%]" />
                         <TextField required label="Model Year" type="text" onChange={handleChange} name="model_year" value={formData.model_year} className="w-[70%]" />
                         <TextField required label="Registered In" type="text" onChange={handleChange} name="registered_in" value={formData.registered_in} className="w-[70%]" />
                         <TextField required label="Location" type="text" onChange={handleChange} name="location" value={formData.location} className="w-[70%]" />
