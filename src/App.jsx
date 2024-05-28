@@ -7,12 +7,13 @@ import Loginpage from './auth/Loginpage'
 import AdminLayout from "./admin_portal/Layout"
 import UserLayout from "./user_portal/Layout"
 import AdminDashboard from "./admin_portal/pages/Dashboard"
-import UserDashboard from "./user_portal/pages/Dashboard"
 import AdminLogin from './auth/AdminLogin'
 import { useAuth } from '../AuthContext'
 import Users from './admin_portal/pages/Users'
 import CarDetails from './web/pages/CarDetails'
 import CarListing from './web/pages/CarListing'
+import MyAds from './user_portal/pages/MyAds'
+import OngoingBids from './user_portal/pages/OngoingBids'
 
 function App() {
 
@@ -41,7 +42,8 @@ function App() {
           </Route>
 
           <Route path='/user_portal' element={<UserLayout />}>
-            <Route index element={<UserDashboard />} />
+            <Route index element={<MyAds />} />
+            <Route path='ongoing-bids' element={<OngoingBids />} />
             <Route path='logout' element={<Logout />} />
           </Route>
 

@@ -16,21 +16,32 @@ const Header = () => {
                     <p className="flex items-center space-x-3 rtl:space-x-reverse">
                         <img src={logo} alt="Logo" />
                     </p>
-                    <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    <div className="flex md:order-2 gap-[5px] space-x-3 md:space-x-0 rtl:space-x-reverse">
 
                         {!currentUser ? (
-                            <Link className='w-full' to="/auth/signup">
-                                <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Signup</button>
-                            </Link>
+                            <>
+                                <Link className='w-full' to="/auth/signup">
+                                    <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Signup</button>
+                                </Link>
+                                <Link className='w-full' to="/auth">
+                                    <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Login</button>
+                                </Link>
+                            </>
                         ) : (
                             userType === "user" ? (
-                                <Link className='w-full' to="/user_portal">
-                                    <button className="text-white flex flex-col justify-center items-center bg-[#4a9024] outline-none font-medium rounded-lg text-sm px-4 py-2">User Portal</button>
-                                </Link>
+                                <>
+                                    <Link className='w-full' to="/user_portal">
+                                        <button className="text-white flex flex-col justify-center items-center bg-[#4a9024] outline-none font-medium rounded-lg text-sm px-4 py-2">User Portal</button>
+                                    </Link>
+                                    <button className='text-white flex flex-col justify-center items-center bg-red-700 outline-none font-medium rounded-lg text-sm px-4 py-2' onClick={logout}>logout</button>
+                                </>
                             ) : (
-                                <Link className='w-full' to="/admin_portal">
-                                    <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Admin Portal</button>
-                                </Link>
+                                <>
+                                    <Link className='w-full' to="/admin_portal">
+                                        <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Admin Portal</button>
+                                    </Link>
+                                    <button className='text-white flex flex-col justify-center items-center bg-red-700 outline-none font-medium rounded-lg text-sm px-4 py-2' onClick={logout}>logout</button>
+                                </>
                             )
                         )}
 
