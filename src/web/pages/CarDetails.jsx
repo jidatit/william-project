@@ -2,12 +2,15 @@
 import React, { useState } from 'react';
 import { useParams } from "react-router-dom";
 import Auctioncard from '../components/ui/Auctioncard'
+import BidDetails from './BidDetails';
 
 import carSlider1 from './../../assets/web/carslider1.png';
 import carSlider2 from './../../assets/web/carslider2.png';
 import carSlider3 from './../../assets/web/carslider3.png';
 import car1 from "../../assets/web/car1.png"
 import car2 from "../../assets/web/car2.png"
+
+import './../styles/web.css'
 
 import Lightbox from "yet-another-react-lightbox";
 import Captions from "yet-another-react-lightbox/plugins/captions";
@@ -78,28 +81,83 @@ const CarDetails = () => {
                     plugins={[Captions, Fullscreen, Thumbnails, Video, Zoom]}
                 />)}
 
-                <div className='w-full min-h-screen grid lg:grid-cols-2 gap-2 justify-center items-center'>
+                <div className='w-full min-h-screen grid lg:grid-cols-2 gap-5 justify-center items-center'>
 
                     <div className='w-full h-full'>
-                        
-                        <div className='border-2 border-rose-600 w-full h-10 grid grid-cols-2 flex-wrap' >
-                            <div className='grid grid-cols-4 w-200 bg-black text-white' >
-                                <div> <h1> Time Left </h1> <h1> 4 Days </h1> </div>
-                                <div>2</div>
-                                <div>3</div>
-                                <div>4</div>
-                            </div>
-                            <div >
-                                <div> <button type="button" class="focus:outline-none text-white bg-[#FFA90A] hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"> Place Bid </button></div>
+
+                        < BidDetails />
+
+                        <div id="detailed-pricing" className="w-full overflow-x-auto table-view">
+                            <div className="overflow-hidden min-w-max">
+
+                                <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-16 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                    <div className="font-bold"> Model Year </div>
+                                    <div className='font-normal'> Lorem </div>
+                                    <div className='font-bold'> Registered In </div>
+                                    <div className='font-normal'> Lorem </div>
+                                </div>
+
+                                <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-16 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                    <div className="font-bold"> Location </div>
+                                    <div className='font-normal'> Lorem </div>
+                                    <div className='font-bold'> Address </div>
+                                    <div className='font-normal'> Lorem </div>
+                                </div>
+
+                                <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-16 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                    <div className="font-bold"> Mileage (km) </div>
+                                    <div className='font-normal'> Lorem </div>
+                                    <div className='font-bold'> Body Color </div>
+                                    <div className='font-normal'> Lorem </div>
+                                </div>
+
+                                <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-16 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                    <div className="font-bold"> Price </div>
+                                    <div className='font-normal'> Lorem </div>
+                                    <div className='font-bold'> Engine Type</div>
+                                    <div className='font-normal'> Lorem </div>
+                                </div>
+
+                                <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-16 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                    <div className="font-bold"> Engine Capacity </div>
+                                    <div className='font-normal'> Lorem </div>
+                                    <div className='font-bold'> Transmission </div>
+                                    <div className='font-normal'> Lorem </div>
+                                </div>
+
+                                <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-16 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                    <div className="font-bold"> Seller Name </div>
+                                    <div className='font-normal'> Lorem </div>
+                                    <div className='font-bold'> Seller Phone Number </div>
+                                    <div className='font-normal'> Lorem </div>
+                                </div>
+
+                                <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-16 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                    <div className="font-bold"> Seller Email </div>
+                                    <div className='font-normal'> Lorem </div>
+                                </div>
+
                             </div>
                         </div>
 
-                        <div><h1> Area 02 </h1></div>
-                        <div><h1> Area 03 </h1></div>
+
+                        <div className='w-full flex flex-col justify-start items-start mt-4' >
+                            <div className='text-2xl font-semibold' >
+                                <h1>
+                                    Description:
+                                </h1>
+                            </div>
+                            <div className='mt-1 mr-5 text-base' >
+                                <p className='text-justify' >
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati voluptatibus voluptas dolor. Eum, impedit quas? Accusamus dicta voluptatem totam iure, mollitia perferendis voluptas, voluptatibus aperiam similique perspiciatis aut eligendi. Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati voluptatibus voluptas dolor. Eum, impedit quas? Accusamus dicta voluptatem totam iure, mollitia perferendis voluptas, voluptatibus aperiam similique perspiciatis aut eligendi.
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div className='w-full h-full grid gap-2'>
-                        <div className="font-bold text-2xl" ><h1>Auctions Ending Soon</h1></div>
+                        <div className="font-bold text-2xl mb-5 " ><h1> Auctions Ending Soon </h1></div>
                         <div className='w-full h-full grid gap-2 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 flex-wrap cursor-pointer'>
                             {carsData && carsData?.map((car, index) => (
                                 <Auctioncard key={index} image={car.image} model={car.model} category={car.category} />
