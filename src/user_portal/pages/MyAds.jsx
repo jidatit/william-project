@@ -32,6 +32,7 @@ const MyAds = () => {
         engine_type: "",
         engine_capacity: "",
         transmission: "",
+        date:"",
         user: {
             // fullname: "",
             // email: "",
@@ -96,7 +97,8 @@ const MyAds = () => {
                 user: {
                     ...currentUser.data,
                     uid: currentUser.uid
-                }
+                },
+                date: new Date().toISOString()
             };
             delete formDataWithUrls.imagePreviews
             await addDoc(collection(db, 'Ads'), formDataWithUrls);
