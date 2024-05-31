@@ -91,7 +91,6 @@ const CarPictures = () => {
                     plugins={[Captions, Fullscreen, Thumbnails, Video, Zoom]}
                 />
             )}
-
         </>
     )
 }
