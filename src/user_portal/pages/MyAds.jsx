@@ -199,22 +199,54 @@ const MyAds = () => {
     //         }
 
     //         const adRef = doc(db, 'Ads', adToUpdate.id);
+    //         const adSnapshot = await getDoc(adRef);
+    //         let currentImages = adSnapshot.exists() ? adSnapshot.data().images : [];
+    //         currentImages = currentImages.map(url => ({ file: url }));
+
+    //         console.log("Current Images 01", currentImages)
+
+    //         const deletedImages = currentImages.filter(
+    //             img => !formData.images.some(newImg => newImg.file === img.file)
+    //         );
+
+    //         console.log("Deleted Images : ", deletedImages)
+
+    //         for (const img of deletedImages) {
+    //             const imageName = decodeURIComponent(img.file.file.split('?')[0].split('/o/')[1]); // Extract the image name from the URL
+    //             const storageRef = ref(storage, `${imageName}`);
+    //             await deleteObject(storageRef);
+    //             console.log(`Image deleted from Firebase Storage: ${imageName}`);
+    //         }
+            
+    //         currentImages = currentImages.filter(
+    //             img => !deletedImages.some(deletedImg => deletedImg.file === img.file)
+    //         );
+
+    //         console.log("Current Images 02", currentImages)
 
     //         const timestamp = Date.now();
     //         const uniqueId = Math.random().toString(36).substring(2);
 
     //         const promises = formData.images.map(async (file) => {
-    //             const storageRef = ref(storage, `Ads/${timestamp}_${uniqueId}_${file.name}`);
-    //             await uploadBytes(storageRef, file);
-    //             return getDownloadURL(storageRef);
+    //             if (file instanceof File) {
+    //                 const storageRef = ref(storage, `Ads/${timestamp}_${uniqueId}_${file.name}`);
+    //                 await uploadBytes(storageRef, file);
+    //                 const url = await getDownloadURL(storageRef);
+    //                 return { file: url };
+    //             } else {
+    //                 return { file: file };
+    //             }
     //         });
 
     //         const newFileUrls = await Promise.all(promises);
 
     //         const updatedImages = [
-    //             // ...currentImages,
-    //             ...newFileUrls.map(url => ({ file: url }))
+    //             ...currentImages,
+    //             ...newFileUrls
     //         ];
+    //         console.log("Current Images : ", currentImages)
+    //         console.log("New Files URL Images : ", newFileUrls)
+    //         console.log("Updated Images : ", updatedImages)
 
     //         const formDataWithUrls = {
     //             ...formData,
@@ -244,36 +276,49 @@ const MyAds = () => {
     // const updateAd = async () => {
     //     try {
     //         setCreateButtonText("Updating...");
-    
+
     //         if (formData.images.length === 0) {
     //             toast.warn("Upload any image(s)!");
     //             setCreateButtonText("Update");
     //             handleClose();
     //             return;
     //         }
-    
+
     //         const adRef = doc(db, 'Ads', adToUpdate.id);
-    
-    //         // Fetch the current ad data
     //         const adSnapshot = await getDoc(adRef);
-    //         const currentImages = adSnapshot.exists() ? adSnapshot.data().images : [];
-    
-    //         // Determine which images were deleted
+    //         let currentImages = adSnapshot.exists() ? adSnapshot.data().images : [];
+    //         currentImages = currentImages.map(url => ({ file: url }));
+
+    //         console.log("Current Images 01", currentImages)
+
     //         const deletedImages = currentImages.filter(
     //             img => !formData.images.some(newImg => newImg.file === img.file)
     //         );
-    
+
+    //         const deletedImages2 = currentImages.filter(
+    //             img => !formData.images.some(newImg => newImg === img.file.file)
+    //         );
+
+    //         console.log("Deleted Images : ", deletedImages2)
+
+
     //         // Delete images from Firebase Storage
-    //         for (const img of deletedImages) {
-    //             const storageRef = ref(storage, img.file);
+    //         for (const img of deletedImages2) {
+    //             const imageName = decodeURIComponent(img.file.file.split('?')[0].split('/o/')[1]); 
+    //             const storageRef = ref(storage, `${imageName}`);
     //             await deleteObject(storageRef);
-    //             console.log(`Image deleted from Firebase Storage: ${img.file}`);
+    //             console.log(`Image deleted from Firebase Storage: ${imageName}`);
     //         }
-    
-    //         // Upload new images to Firebase Storage
+            
+    //         currentImages = currentImages.filter(
+    //             img => !deletedImages.some(deletedImg => deletedImg.file === img.file)
+    //         );
+
+    //         console.log("Current Images 02", currentImages)
+
     //         const timestamp = Date.now();
     //         const uniqueId = Math.random().toString(36).substring(2);
-    
+
     //         const promises = formData.images.map(async (file) => {
     //             if (file instanceof File) {
     //                 const storageRef = ref(storage, `Ads/${timestamp}_${uniqueId}_${file.name}`);
@@ -281,16 +326,20 @@ const MyAds = () => {
     //                 const url = await getDownloadURL(storageRef);
     //                 return { file: url };
     //             } else {
-    //                 return file; 
+    //                 return { file: file };
     //             }
     //         });
-    
+
     //         const newFileUrls = await Promise.all(promises);
 
     //         const updatedImages = [
+    //             ...currentImages,
     //             ...newFileUrls
     //         ];
-    
+    //         console.log("Current Images : ", currentImages)
+    //         console.log("New Files URL Images : ", newFileUrls)
+    //         console.log("Updated Images : ", updatedImages)
+
     //         const formDataWithUrls = {
     //             ...formData,
     //             images: updatedImages,
@@ -301,7 +350,7 @@ const MyAds = () => {
     //             date: new Date().toISOString()
     //         };
     //         delete formDataWithUrls.imagePreviews;
-    
+
     //         await updateDoc(adRef, formDataWithUrls);
     //         fetchMyAds();
     //         toast.success("Ad updated successfully!");
@@ -315,43 +364,47 @@ const MyAds = () => {
     //         handleClose();
     //     }
     // };
-    
+
     const updateAd = async () => {
         try {
             setCreateButtonText("Updating...");
-    
+
             if (formData.images.length === 0) {
                 toast.warn("Upload any image(s)!");
                 setCreateButtonText("Update");
                 handleClose();
                 return;
             }
-    
+
             const adRef = doc(db, 'Ads', adToUpdate.id);
             const adSnapshot = await getDoc(adRef);
             let currentImages = adSnapshot.exists() ? adSnapshot.data().images : [];
             currentImages = currentImages.map(url => ({ file: url }));
-            
+
             const deletedImages = currentImages.filter(
                 img => !formData.images.some(newImg => newImg.file === img.file)
             );
-            
-            // // Delete images from Firebase Storage
-            // for (const img of deletedImages) {
-            //     const imageName = decodeURIComponent(img.file.file.split('?')[0].split('/o/')[1]); // Extract the image name from the URL
-            //     const storageRef = ref(storage, `${imageName}`);
-            //     await deleteObject(storageRef);
-            //     console.log(`Image deleted from Firebase Storage: ${imageName}`);
-            // }
+
+            const deletedImagesFromStorage = currentImages.filter(
+                img => !formData.images.some(newImg => newImg === img.file.file)
+            );
+
+            for (const img of deletedImagesFromStorage) {
+                const imageName = decodeURIComponent(img.file.file.split('?')[0].split('/o/')[1]); 
+                const storageRef = ref(storage, `${imageName}`);
+                await deleteObject(storageRef);
+                console.log(`Image deleted from Firebase Storage: ${imageName}`);
+            }
             
             currentImages = currentImages.filter(
                 img => !deletedImages.some(deletedImg => deletedImg.file === img.file)
             );
-            
+
+            console.log("Current Images 02", currentImages)
+
             const timestamp = Date.now();
             const uniqueId = Math.random().toString(36).substring(2);
-            console.log(formData.images,"form")
-    
+
             const promises = formData.images.map(async (file) => {
                 if (file instanceof File) {
                     const storageRef = ref(storage, `Ads/${timestamp}_${uniqueId}_${file.name}`);
@@ -359,17 +412,20 @@ const MyAds = () => {
                     const url = await getDownloadURL(storageRef);
                     return { file: url };
                 } else {
-                    return {file:file}; 
+                    return { file: file };
                 }
             });
-    
+
             const newFileUrls = await Promise.all(promises);
-    
+
             const updatedImages = [
-                ...currentImages, 
-                ...newFileUrls 
+                ...currentImages,
+                ...newFileUrls
             ];
-            console.log(updatedImages)
+            console.log("Current Images : ", currentImages)
+            console.log("New Files URL Images : ", newFileUrls)
+            console.log("Updated Images : ", updatedImages)
+
             const formDataWithUrls = {
                 ...formData,
                 images: updatedImages,
@@ -380,7 +436,7 @@ const MyAds = () => {
                 date: new Date().toISOString()
             };
             delete formDataWithUrls.imagePreviews;
-    
+
             await updateDoc(adRef, formDataWithUrls);
             fetchMyAds();
             toast.success("Ad updated successfully!");
@@ -394,8 +450,7 @@ const MyAds = () => {
             handleClose();
         }
     };
-    
-    
+
     const deleteAd = async (id) => {
         try {
             await deleteDoc(doc(db, 'Ads', id));
