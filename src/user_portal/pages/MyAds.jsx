@@ -4,18 +4,37 @@ import { Modal, TextField, InputLabel, Select, MenuItem, FormControl } from '@mu
 import Button from "../components/ui/Button"
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { db, storage } from "../../../db"
-import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from '@firebase/storage';
+import { addDoc, deleteDoc, updateDoc, collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from '@firebase/storage';
 import { useAuth } from "../../../AuthContext"
 
 const MyAds = () => {
+
     const { currentUser } = useAuth()
     const [MyAds, setMyAds] = useState([]);
-    const [buttonText, setButtonText] = useState("Submit");
+    const [createButtonText, setCreateButtonText] = useState("Create");
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [adToUpdate, setAdToUpdate] = useState(null);
+
+    const CreateHandleOpen = () => {
+        resetFormData();
+        setCreateButtonText("Create");
+        setAdToUpdate(null);
+        setOpen(true);
+    };
+
+    const updateHandleOpen = (data) => {
+        populateFormData(data);
+        setCreateButtonText("Update");
+        setAdToUpdate(data);
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
 
     const [formData, setFormData] = useState({
         images: [],
@@ -32,13 +51,51 @@ const MyAds = () => {
         engine_type: "",
         engine_capacity: "",
         transmission: "",
-        date:"",
-        user: {
-            // fullname: "",
-            // email: "",
-            // phoneNumber: ""
-        }
+        date: "",
+        user: {}
     });
+
+    const resetFormData = () => {
+        setFormData({
+            images: [],
+            imagePreviews: [],
+            model_name: "",
+            model_year: "",
+            registered_in: "",
+            location: "",
+            address: "",
+            mileage_km: "",
+            body_color: "",
+            price: "",
+            description: "",
+            engine_type: "",
+            engine_capacity: "",
+            transmission: "",
+            date: "",
+            user: {}
+        });
+    };
+
+    const populateFormData = (data) => {
+        setFormData({
+            images: data.images ? data.images.map(image => image.file) : [],
+            imagePreviews: data.images ? data.images.map(image => image.file) : [],
+            model_name: data.model_name,
+            model_year: data.model_year,
+            registered_in: data.registered_in,
+            location: data.location,
+            address: data.address,
+            mileage_km: data.mileage_km,
+            body_color: data.body_color,
+            price: data.price,
+            description: data.description,
+            engine_type: data.engine_type,
+            engine_capacity: data.engine_capacity,
+            transmission: data.transmission,
+            date: data.date,
+            user: {}
+        });
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -61,21 +118,36 @@ const MyAds = () => {
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-        const imagePreviews = files.map(file => URL.createObjectURL(file));
+        const newImagePreviews = files.map(file => URL.createObjectURL(file));
 
         setFormData(prevState => ({
             ...prevState,
-            images: files,
-            imagePreviews
+            images: [...prevState.images, ...files],
+            imagePreviews: [...prevState.imagePreviews, ...newImagePreviews]
         }));
+    };
+
+    const handleImageDelete = (index) => {
+
+        setFormData(prevState => {
+            const newImages = [...prevState.images];
+            const newImagePreviews = [...prevState.imagePreviews];
+            newImages.splice(index, 1);
+            newImagePreviews.splice(index, 1);
+            return {
+                ...prevState,
+                images: newImages,
+                imagePreviews: newImagePreviews
+            };
+        });
     };
 
     const createAd = async () => {
         try {
-            setButtonText("Submitting...")
+            setCreateButtonText("Creating...");
             if (formData.images.length === 0) {
                 toast.warn("Upload any image(s)!");
-                setButtonText("Submit")
+                setCreateButtonText("Create");
                 handleClose();
                 return;
             }
@@ -100,17 +172,239 @@ const MyAds = () => {
                 },
                 date: new Date().toISOString()
             };
-            delete formDataWithUrls.imagePreviews
+            delete formDataWithUrls.imagePreviews;
             await addDoc(collection(db, 'Ads'), formDataWithUrls);
-
+            fetchMyAds();
             toast.success("Ad created with success!");
-            setButtonText("Submit")
-            handleClose();
         } catch (error) {
             console.error("Error creating Ad:", error);
             toast.error("Error creating Ad!");
-            setButtonText("Submit")
             handleClose();
+        } finally {
+            setCreateButtonText("Create");
+            resetFormData();
+            handleClose();
+        }
+    };
+
+    // const updateAd = async () => {
+    //     try {
+    //         setCreateButtonText("Updating...");
+
+    //         if (formData.images.length === 0) {
+    //             toast.warn("Upload any image(s)!");
+    //             setCreateButtonText("Update");
+    //             handleClose();
+    //             return;
+    //         }
+
+    //         const adRef = doc(db, 'Ads', adToUpdate.id);
+
+    //         const timestamp = Date.now();
+    //         const uniqueId = Math.random().toString(36).substring(2);
+
+    //         const promises = formData.images.map(async (file) => {
+    //             const storageRef = ref(storage, `Ads/${timestamp}_${uniqueId}_${file.name}`);
+    //             await uploadBytes(storageRef, file);
+    //             return getDownloadURL(storageRef);
+    //         });
+
+    //         const newFileUrls = await Promise.all(promises);
+
+    //         const updatedImages = [
+    //             // ...currentImages,
+    //             ...newFileUrls.map(url => ({ file: url }))
+    //         ];
+
+    //         const formDataWithUrls = {
+    //             ...formData,
+    //             images: updatedImages,
+    //             user: {
+    //                 ...currentUser.data,
+    //                 uid: currentUser.uid
+    //             },
+    //             date: new Date().toISOString()
+    //         };
+    //         delete formDataWithUrls.imagePreviews;
+
+    //         await updateDoc(adRef, formDataWithUrls);
+    //         fetchMyAds();
+    //         toast.success("Ad updated successfully!");
+    //     } catch (error) {
+    //         console.error("Error updating Ad:", error);
+    //         toast.error("Error updating Ad!");
+    //         handleClose();
+    //     } finally {
+    //         setCreateButtonText("Update");
+    //         resetFormData();
+    //         handleClose();
+    //     }
+    // };
+
+    // const updateAd = async () => {
+    //     try {
+    //         setCreateButtonText("Updating...");
+    
+    //         if (formData.images.length === 0) {
+    //             toast.warn("Upload any image(s)!");
+    //             setCreateButtonText("Update");
+    //             handleClose();
+    //             return;
+    //         }
+    
+    //         const adRef = doc(db, 'Ads', adToUpdate.id);
+    
+    //         // Fetch the current ad data
+    //         const adSnapshot = await getDoc(adRef);
+    //         const currentImages = adSnapshot.exists() ? adSnapshot.data().images : [];
+    
+    //         // Determine which images were deleted
+    //         const deletedImages = currentImages.filter(
+    //             img => !formData.images.some(newImg => newImg.file === img.file)
+    //         );
+    
+    //         // Delete images from Firebase Storage
+    //         for (const img of deletedImages) {
+    //             const storageRef = ref(storage, img.file);
+    //             await deleteObject(storageRef);
+    //             console.log(`Image deleted from Firebase Storage: ${img.file}`);
+    //         }
+    
+    //         // Upload new images to Firebase Storage
+    //         const timestamp = Date.now();
+    //         const uniqueId = Math.random().toString(36).substring(2);
+    
+    //         const promises = formData.images.map(async (file) => {
+    //             if (file instanceof File) {
+    //                 const storageRef = ref(storage, `Ads/${timestamp}_${uniqueId}_${file.name}`);
+    //                 await uploadBytes(storageRef, file);
+    //                 const url = await getDownloadURL(storageRef);
+    //                 return { file: url };
+    //             } else {
+    //                 return file; 
+    //             }
+    //         });
+    
+    //         const newFileUrls = await Promise.all(promises);
+
+    //         const updatedImages = [
+    //             ...newFileUrls
+    //         ];
+    
+    //         const formDataWithUrls = {
+    //             ...formData,
+    //             images: updatedImages,
+    //             user: {
+    //                 ...currentUser.data,
+    //                 uid: currentUser.uid
+    //             },
+    //             date: new Date().toISOString()
+    //         };
+    //         delete formDataWithUrls.imagePreviews;
+    
+    //         await updateDoc(adRef, formDataWithUrls);
+    //         fetchMyAds();
+    //         toast.success("Ad updated successfully!");
+    //     } catch (error) {
+    //         console.error("Error updating Ad:", error);
+    //         toast.error("Error updating Ad!");
+    //         handleClose();
+    //     } finally {
+    //         setCreateButtonText("Update");
+    //         resetFormData();
+    //         handleClose();
+    //     }
+    // };
+    
+    const updateAd = async () => {
+        try {
+            setCreateButtonText("Updating...");
+    
+            if (formData.images.length === 0) {
+                toast.warn("Upload any image(s)!");
+                setCreateButtonText("Update");
+                handleClose();
+                return;
+            }
+    
+            const adRef = doc(db, 'Ads', adToUpdate.id);
+            const adSnapshot = await getDoc(adRef);
+            let currentImages = adSnapshot.exists() ? adSnapshot.data().images : [];
+            currentImages = currentImages.map(url => ({ file: url }));
+            
+            const deletedImages = currentImages.filter(
+                img => !formData.images.some(newImg => newImg.file === img.file)
+            );
+            
+            // // Delete images from Firebase Storage
+            // for (const img of deletedImages) {
+            //     const imageName = decodeURIComponent(img.file.file.split('?')[0].split('/o/')[1]); // Extract the image name from the URL
+            //     const storageRef = ref(storage, `${imageName}`);
+            //     await deleteObject(storageRef);
+            //     console.log(`Image deleted from Firebase Storage: ${imageName}`);
+            // }
+            
+            currentImages = currentImages.filter(
+                img => !deletedImages.some(deletedImg => deletedImg.file === img.file)
+            );
+            
+            const timestamp = Date.now();
+            const uniqueId = Math.random().toString(36).substring(2);
+            console.log(formData.images,"form")
+    
+            const promises = formData.images.map(async (file) => {
+                if (file instanceof File) {
+                    const storageRef = ref(storage, `Ads/${timestamp}_${uniqueId}_${file.name}`);
+                    await uploadBytes(storageRef, file);
+                    const url = await getDownloadURL(storageRef);
+                    return { file: url };
+                } else {
+                    return {file:file}; 
+                }
+            });
+    
+            const newFileUrls = await Promise.all(promises);
+    
+            const updatedImages = [
+                ...currentImages, 
+                ...newFileUrls 
+            ];
+            console.log(updatedImages)
+            const formDataWithUrls = {
+                ...formData,
+                images: updatedImages,
+                user: {
+                    ...currentUser.data,
+                    uid: currentUser.uid
+                },
+                date: new Date().toISOString()
+            };
+            delete formDataWithUrls.imagePreviews;
+    
+            await updateDoc(adRef, formDataWithUrls);
+            fetchMyAds();
+            toast.success("Ad updated successfully!");
+        } catch (error) {
+            console.error("Error updating Ad:", error);
+            toast.error("Error updating Ad!");
+            handleClose();
+        } finally {
+            setCreateButtonText("Update");
+            resetFormData();
+            handleClose();
+        }
+    };
+    
+    
+    const deleteAd = async (id) => {
+        try {
+            await deleteDoc(doc(db, 'Ads', id));
+            console.log("Ad deleted successfully");
+            toast.success("Ad Deleted successfully!");
+            fetchMyAds();
+        } catch (error) {
+            console.error("Error deleting ad:", error);
+            toast.error("Error Deleting Ad!");
         }
     };
 
@@ -123,7 +417,6 @@ const MyAds = () => {
             allQts.push({ id: doc.id, ...doc.data() });
         });
         setMyAds(allQts)
-        console.log(allQts)
     }
 
     useEffect(() => {
@@ -135,7 +428,7 @@ const MyAds = () => {
             <div className='w-[80%] min-h-screen flex flex-col justify-start items-center'>
                 <ToastContainer />
                 <div className='w-full mt-[20px] mb-[20px] flex flex-col justify-center items-start'>
-                    <div onClick={handleOpen} className='lg:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#FFA90A] hover:text-white rounded-[30px] border-[2px] border-[#FFA90A] text-[#FFA90A] font-semibold p-3'>
+                    <div onClick={CreateHandleOpen} className='lg:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#FFA90A] hover:text-white rounded-[30px] border-[2px] border-[#FFA90A] text-[#FFA90A] font-semibold p-3'>
                         <p className='text-center'>Create an Ad</p>
                     </div>
                 </div>
@@ -153,7 +446,7 @@ const MyAds = () => {
 
                 <div className='w-full flex flex-col mb-[50px] justify-center items-center gap-3'>
                     {MyAds && MyAds.map((ad, index) => (
-                        <AdCard key={index} data={ad} />
+                        <AdCard key={index} data={ad} onDelete={deleteAd} onUpdate={updateHandleOpen} />
                     ))}
                 </div>
 
@@ -168,8 +461,8 @@ const MyAds = () => {
                         justifyContent: 'center',
                     }}
                 >
-                    <div className="md:w-[50%] w-[90%] mt-[50px] gap-4 bg-white flex flex-col  rounded-md shadow-lg overflow-y-auto max-h-[80vh] items-center py-[30px]">
-                        <h3 className='font-bold md:text-[24px] text-[15px] text-center'>Create an Ad</h3>
+                    <div className="md:w-[50%] w-[90%] mt-[50px] gap-4 bg-white flex flex-col rounded-md shadow-lg overflow-y-auto max-h-[80vh] items-center py-[30px]">
+                        <h3 className='font-bold md:text-[24px] text-[15px] text-center'>{adToUpdate === null ? 'Create Ad' : 'Update Ad'}</h3>
 
                         <div className="file_upload w-[70%] p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
                             <svg className="text-indigo-500 w-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
@@ -185,7 +478,10 @@ const MyAds = () => {
 
                         <div className="w-[70%] grid grid-cols-4 gap-1 items-center justify-center mt-4">
                             {formData.imagePreviews.map((preview, index) => (
-                                <img key={index} src={preview} alt={`preview ${index}`} className="w-[200px] h-[100px] object-cover mb-2 rounded-md" />
+                                <div key={index} className='relative' >
+                                    <button onClick={() => handleImageDelete(index)} className="absolute w-full flex justify-end items-end text-black rounded-md">< CancelIcon /></button>
+                                    <img src={preview} alt={`preview ${index}`} className="w-[200px] h-[100px] object-cover mb-2 rounded-md" />
+                                </div>
                             ))}
                         </div>
 
@@ -229,18 +525,13 @@ const MyAds = () => {
                             </Select>
                         </FormControl>
 
-                        {/* <TextField required label="Full Name" type="text" onChange={handleChange} name="user.fullname" value={formData.user.fullname} className="w-[70%]" />
-                        <TextField required label="Email" type="text" onChange={handleChange} name="user.email" value={formData.user.email} className="w-[70%]" />
-                        <TextField required label="Phone Number" type="text" onChange={handleChange} name="user.phoneNumber" value={formData.user.phoneNumber} className="w-[70%]" /> */}
-
                         <div className="w-[90%] mb-5 flex flex-col justify-end items-end">
                             <div className="md:w-[30%] w-full pr-0 md:pr-2">
-                                <Button onClickProp={createAd} text={buttonText} />
+                                <Button onClickProp={createButtonText === "Create" ? createAd : updateAd} text={createButtonText} />
                             </div>
                         </div>
                     </div>
                 </Modal>
-
             </div>
         </>
     )

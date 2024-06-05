@@ -60,26 +60,20 @@ const Homepage = () => {
                     </div>
                 </div>
 
-                <div className='w-[90%] shadow-lg mt-[-90px] px-5 py-3 bg-[#FFA90A] rounded-[20px] text-black flex flex-col justify-center items-center gap-5'>
+                <div className='w-[90%] shadow-lg mt-[-90px] px-5 pb-5 pt-10 bg-[#FFA90A] rounded-[20px] text-black flex flex-col justify-center items-center gap-5'>
                     <h2 className='text-center font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>Why Us?</h2>
                     <div className='w-full grid lg:grid-cols-3 grid-cols-1 justify-center items-center gap-5'>
                         <div className='w-full flex flex-col justify-center items-center gap-5'>
-                            <div className='w-[60px] h-[60px] rounded-full bg-[#D9D9D9]'>
-
-                            </div>
-                            <p className='text-center font-semibold lg:text-[25px] md:text-[20px] text-[15px]'>#1 automotive marketplace</p>
+                            <h1 className='text-4xl font-bold' > No.1 </h1>
+                            <p className='text-center font-semibold lg:text-[25px] md:text-[20px] text-[18px] mb-5'> Automotive Marketplace </p>
                         </div>
                         <div className='w-full flex flex-col justify-center items-center gap-5'>
-                            <div className='w-[60px] h-[60px] rounded-full bg-[#D9D9D9]'>
-
-                            </div>
-                            <p className='text-center font-semibold lg:text-[25px] md:text-[20px] text-[15px]'>5+ lac visitors daily</p>
+                            <h1 className='text-4xl font-bold' > 5 Lac + </h1>
+                            <p className='text-center font-semibold lg:text-[25px] md:text-[20px] text-[18px] mb-5'> Visitors Daily </p>
                         </div>
-                        <div className='w-full flex flex-col justify-center items-center gap-5'>
-                            <div className='w-[60px] h-[60px] rounded-full bg-[#D9D9D9]'>
-
-                            </div>
-                            <p className='text-center font-semibold lg:text-[25px] md:text-[20px] text-[15px]'>3 million+ cars sold</p>
+                        <div className='w-full flex flex-col justify-center items-center gap-5 '>
+                            <h1 className='text-4xl font-bold' > 3 Million + </h1>
+                            <p className='text-center font-semibold lg:text-[25px] md:text-[20px] text-[18px] mb-5'> Cars Sold </p>
                         </div>
                     </div>
                 </div>

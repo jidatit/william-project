@@ -67,8 +67,9 @@ const CarDetails = () => {
         <>
             <div className='w-full flex flex-col justify-center items-center my-5 lg:my-10 px-[20px] lg:px-[50px]'>
                 < CarPictures />
-                <div className='w-full min-h-screen grid grid-cols-1 lg:grid-cols-2 gap-5 justify-center items-start my-10'>
-                    <div className='w-full h-full'>
+                
+                <div className='w-full min-h-screen grid grid-cols-1 lg:grid-cols-10 gap-5 justify-center items-start my-10'>
+                    <div className='w-full h-full col-span-6'>
                     <BidDetails carData={tempcarData}/>
 
                         <div id="detailed-pricing" className="w-full overflow-x-auto">
@@ -139,7 +140,7 @@ const CarDetails = () => {
 
                     </div>
 
-                    <div className='w-full grid gap-2'>
+                    <div className='w-full grid gap-2 col-span-4'>
                         <div className="font-bold text-2xl mb-3" ><h1> Auctions Ending Soon </h1></div>
                         <div className='w-full h-full grid gap-2 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 flex-wrap cursor-pointer'>
                             {carsData && carsData?.map((car, index) => (

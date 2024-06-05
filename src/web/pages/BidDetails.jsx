@@ -1,11 +1,9 @@
 import React from 'react'
 
-const BidDetails = ({carData}) => {
-
-    console.log("Biding : " , carData)
+const BidDetails = ({ carData }) => {
 
     const calculateDaysLeft = (postDate) => {
-        const oneDay = 24 * 60 * 60 * 1000; 
+        const oneDay = 24 * 60 * 60 * 1000;
         const currentDate = new Date();
         const post = new Date(postDate);
         const diffDays = Math.round(Math.abs((currentDate - post) / oneDay));
@@ -18,20 +16,20 @@ const BidDetails = ({carData}) => {
         <>
             <div className='w-full flex flex-col xl:flex-row justify-between gap-2 mb-0 xl:mb-3'>
 
-                <div className='grid grid-cols-10 justify-center gap-2 items-center bg-black text-white w-full xl:w-4/5'>
-                    <div className='flex flex-row w-full justify-center col-span-10 xl:col-span-3 mt-5 md:mt-0 gap-3'>
+                <div className='grid lg:grid-flow-col lg:auto-cols-auto px-5 py-2 lg:py-0 gap-4 items-center bg-black text-white w-full xl:w-4/5'>
+                    <div className='flex flex-row justify-center mt-5 md:mt-0 gap-3'>
                         <h1 className='font-light'>Time Left</h1>
-                        <h1 className='font-bold'> {calculateDaysLeft(carData.date)} </h1>
+                        <h1 className='font-bold'>{calculateDaysLeft(carData.date)}</h1>
                     </div>
-                    <div className='flex flex-row justify-center col-span-10 xl:col-span-3 gap-3'>
+                    <div className='flex flex-row justify-center gap-3'>
                         <h1 className='font-light'>High Bid</h1>
                         <h1 className='font-bold'>$42000</h1>
                     </div>
-                    <div className='flex flex-row justify-center col-span-10 xl:col-span-2 gap-2'>
+                    <div className='flex flex-row justify-center gap-2'>
                         <h1 className='font-light'>Bid</h1>
                         <h1 className='font-bold'>7</h1>
                     </div>
-                    <div className='flex flex-row justify-center col-span-10 xl:col-span-2 mb-5 md:mb-0 gap-2'>
+                    <div className='flex flex-row justify-center mb-5 md:mb-0 gap-2'>
                         <h1 className='font-light'>Comments</h1>
                         <h1 className='font-bold'>6</h1>
                     </div>

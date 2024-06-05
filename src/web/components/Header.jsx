@@ -11,7 +11,7 @@ const Header = () => {
     }
     return (
         <>
-            <nav className="w-full sticky top-0 z-40 bg-[#000000] opacity-85">
+            <nav className="w-full sticky top-0 z-40 bg-[#000000]">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                     <p className="flex items-center space-x-3 rtl:space-x-reverse">
                         <img src={logo} alt="Logo" />
@@ -59,6 +59,11 @@ const Header = () => {
                             <Link to="/">
                                 <li>
                                     <p className="block py-2 px-3 md:p-0 text-white  rounded md:bg-transparent">Home</p>
+                                </li>
+                            </Link>
+                            <Link to="/car-listing">
+                                <li>
+                                    <p className="block py-2 px-3 md:p-0 text-white  rounded md:bg-transparent">Listing</p>
                                 </li>
                             </Link>
                             <li>
