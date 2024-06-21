@@ -2,14 +2,14 @@ import React from 'react'
 
 const BidDetails = ({ carData }) => {
 
-    const calculateDaysLeft = (postDate) => {
-        const oneDay = 24 * 60 * 60 * 1000;
-        const currentDate = new Date();
-        const post = new Date(postDate);
-        const diffDays = Math.round(Math.abs((currentDate - post) / oneDay));
-        const daysLeft = 7 - diffDays;
-        return daysLeft;
-    };
+    // const calculateDaysLeft = (postDate) => {
+    //     const oneDay = 24 * 60 * 60 * 1000;
+    //     const currentDate = new Date();
+    //     const post = new Date(postDate);
+    //     const diffDays = Math.round(Math.abs((currentDate - post) / oneDay));
+    //     const daysLeft = 7 - diffDays;
+    //     return daysLeft;
+    // };
 
 
     return (
@@ -19,7 +19,8 @@ const BidDetails = ({ carData }) => {
                 <div className='grid lg:grid-flow-col lg:auto-cols-auto px-5 py-2 lg:py-0 gap-4 items-center bg-black text-white w-full xl:w-4/5'>
                     <div className='flex flex-row justify-center mt-5 md:mt-0 gap-3'>
                         <h1 className='font-light'>Time Left</h1>
-                        <h1 className='font-bold'>{calculateDaysLeft(carData.date)}</h1>
+                        <h1 className='font-bold'>7 Days</h1>
+                        {/* <h1 className='font-bold'>{calculateDaysLeft(carData.date)}</h1> */}
                     </div>
                     <div className='flex flex-row justify-center gap-3'>
                         <h1 className='font-light'>High Bid</h1>

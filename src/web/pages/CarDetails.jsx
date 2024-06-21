@@ -17,9 +17,9 @@ import { getDoc, doc } from 'firebase/firestore';
 const CarDetails = () => {
 
     const { id } = useParams();
-    let [tempcarData, setTempCarData] = useState({});
+    let [carData, setCarData] = useState({});
 
-    const carsData = [
+    const  tempCarrDdata = [
         {
             image: car1,
             model: "Dacia Sanderi",
@@ -47,12 +47,12 @@ const CarDetails = () => {
             const adRef = doc(db, 'Ads', adId);
             const adSnapshot = await getDoc(adRef);
             if (adSnapshot.exists()) {
-                setTempCarData({ id: adSnapshot.id, ...adSnapshot.data() });
+                setCarData({ id: adSnapshot.id, ...adSnapshot.data() });
             } else {
                 console.error('No such document!');
             }
         } catch (error) {
-            console.error("Error fetching tempcarData:", error);
+            console.error("Error fetching carData:", error);
         }
     };
 
@@ -70,51 +70,51 @@ const CarDetails = () => {
                 
                 <div className='w-full min-h-screen grid grid-cols-1 lg:grid-cols-10 gap-5 justify-center items-start my-10'>
                     <div className='w-full h-full col-span-6'>
-                    <BidDetails carData={tempcarData}/>
+                    <BidDetails carData={carData}/>
 
                         <div id="detailed-pricing" className="w-full overflow-x-auto">
                             <div className="overflow-hidden min-w-max">
-                                {tempcarData && (
+                                {carData && (
                                     <>
-                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 ">
                                             <div className="font-bold"> Model Year </div>
-                                            <div className='font-normal'> {tempcarData.model_year} </div>
+                                            <div className='font-normal'> {carData.model_year} </div>
                                             <div className='font-bold'> Registered In </div>
-                                            <div className='font-normal'> {tempcarData.registered_in} </div>
+                                            <div className='font-normal'> {carData.registered_in} </div>
                                         </div>
-                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 ">
                                             <div className="font-bold"> Location </div>
-                                            <div className='font-normal'> {tempcarData.location} </div>
+                                            <div className='font-normal'> {carData.location} </div>
                                             <div className='font-bold'> Address </div>
-                                            <div className='font-normal'> {tempcarData.address} </div>
+                                            <div className='font-normal'> {carData.address} </div>
                                         </div>
-                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 ">
                                             <div className="font-bold"> Mileage (km) </div>
-                                            <div className='font-normal'> {tempcarData.mileage_km} </div>
+                                            <div className='font-normal'> {carData.mileage_km} </div>
                                             <div className='font-bold'> Body Color </div>
-                                            <div className='font-normal'> {tempcarData.body_color} </div>
+                                            <div className='font-normal'> {carData.body_color} </div>
                                         </div>
-                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 ">
                                             <div className="font-bold"> Price </div>
-                                            <div className='font-normal'> {tempcarData.price} </div>
+                                            <div className='font-normal'> {carData.price} </div>
                                             <div className='font-bold'> Engine Type </div>
-                                            <div className='font-normal'> {tempcarData.engine_type} </div>
+                                            <div className='font-normal'> {carData.engine_type} </div>
                                         </div>
-                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 ">
                                             <div className="font-bold"> Engine Capacity </div>
-                                            <div className='font-normal'> {tempcarData.engine_capacity} </div>
+                                            <div className='font-normal'> {carData.engine_capacity} </div>
                                             <div className='font-bold'> Transmission </div>
-                                            <div className='font-normal'> {tempcarData.transmission} </div>
+                                            <div className='font-normal'> {carData.transmission} </div>
                                         </div>
-                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 ">
                                             <div className="font-bold"> Seller Name </div>
-                                            <div className='font-normal'> {tempcarData.user?.fullname} </div>
+                                            <div className='font-normal'> {carData.user?.fullname} </div>
                                             <div className='font-bold'> Seller Phone Number </div>
-                                            <div className='font-normal'> {tempcarData.user?.phoneNumber} </div>
+                                            <div className='font-normal'> {carData.user?.phoneNumber} </div>
                                         </div>
-                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <div className="grid grid-cols-4 p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 gap-x-4 ">
                                             <div className="font-bold"> Seller Email </div>
-                                            <div className='font-normal'> {tempcarData.user?.email} </div>
+                                            <div className='font-normal'> {carData.user?.email} </div>
                                         </div>
                                     </>
                                 )}
@@ -129,9 +129,9 @@ const CarDetails = () => {
                             </div>
                             <div className='mt-1 mr-5 text-base' >
                                 <p className='text-justify' >
-                                    {tempcarData && (
+                                    {carData && (
                                         <>
-                                            {tempcarData.description}
+                                            {carData.description}
                                         </>
                                     )}
                                 </p>
@@ -143,7 +143,7 @@ const CarDetails = () => {
                     <div className='w-full grid gap-2 col-span-4'>
                         <div className="font-bold text-2xl mb-3" ><h1> Auctions Ending Soon </h1></div>
                         <div className='w-full h-full grid gap-2 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 flex-wrap cursor-pointer'>
-                            {carsData && carsData?.map((car, index) => (
+                            { tempCarrDdata &&  tempCarrDdata?.map((car, index) => (
                                 <Auctioncard key={index} image={car.image} model={car.model} category={car.category} />
                             ))}
                         </div>

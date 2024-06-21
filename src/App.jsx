@@ -15,6 +15,8 @@ import CarListing from './web/pages/CarListing'
 
 import MyAds from './user_portal/pages/MyAds'
 import OngoingBids from './user_portal/pages/OngoingBids'
+import EditProfile from './user_portal/pages/EditProfile'
+import ChangePassword from './user_portal/pages/ChangePassword'
 
 function App() {
 
@@ -33,7 +35,6 @@ function App() {
             <Route index element={<Homepage />} />
             <Route path="car-listing" element={<CarListing />} />
             <Route path="car-details/:id" element={<CarDetails />} />
-
           </Route>
 
           <Route path='/admin_portal' element={<AdminLayout />}>
@@ -44,6 +45,8 @@ function App() {
 
           <Route path='/user_portal' element={<UserLayout />}>
             <Route index element={<MyAds />} />
+            <Route path='edit-profile' element={<EditProfile />} />
+            <Route path='change-password' element={<ChangePassword />} />
             <Route path='ongoing-bids' element={<OngoingBids />} />
             <Route path='logout' element={<Logout />} />
           </Route>
@@ -73,4 +76,4 @@ function Logout() {
   )
 }
 
-export default App
+export default App;
