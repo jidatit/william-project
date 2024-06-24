@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
-
-import './../styles/web.css'
-
 import Lightbox from "yet-another-react-lightbox";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";

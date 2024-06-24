@@ -5,12 +5,17 @@ import { strTruncator } from "strtoolkit"
 const AdCard = ({ data, onDelete, onUpdate }) => {
 
     const navigate = useNavigate();
+    const [seeBids, setSeeBids] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
 
     const handleViewListing = () => {
         navigate(`/car-details/${data.id}`);
     };
+
+    const handleSeeBids = () => {
+        setSeeBids(true);
+    }
 
     const handleDelete = async () => {
         setIsDeleting(true);
@@ -55,9 +60,13 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                             <p> {data.engine_capacity + ' cc'} </p>
                         </div>
                         <div className='w-full xl:w-[60%] flex flex-col md:flex-row lg:flex-row justify-center items-center gap-1'>
-                            <button className='bg-[#FFA90A] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                            
+                            <button 
+                                onClick={handleSeeBids}
+                                className='bg-[#FFA90A] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
                                 See Bids
                             </button>
+
                             <button
                                 onClick={handleUpdate}
                                 disabled={isUpdating}
@@ -78,9 +87,17 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                             </button>
                         </div>
                     </div>
-
                 </div>
             </div>
+            {seeBids === true ? (
+                <>
+                    <div className='' > 
+                        The bids
+                    </div>
+                </>
+            ) : (
+            <div></div>
+            )}
         </>
     )
 }
