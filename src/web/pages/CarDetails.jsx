@@ -13,13 +13,14 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 import { db } from "./../../../db"
 import { getDoc, doc } from 'firebase/firestore';
+import BiddingBox from '../components/BiddingBox';
 
 const CarDetails = () => {
 
     const { id } = useParams();
     let [carData, setCarData] = useState({});
 
-    const  tempCarrDdata = [
+    const tempCarrDdata = [
         {
             image: car1,
             model: "Dacia Sanderi",
@@ -67,10 +68,10 @@ const CarDetails = () => {
         <>
             <div className='w-full flex flex-col justify-center items-center my-5 lg:my-10 px-[20px] lg:px-[50px]'>
                 < CarPictures />
-                
+
                 <div className='w-full min-h-screen grid grid-cols-1 lg:grid-cols-10 gap-5 justify-center items-start my-10'>
                     <div className='w-full h-full col-span-6'>
-                    <BidDetails carData={carData}/>
+                        <BidDetails />
 
                         <div id="detailed-pricing" className="w-full overflow-x-auto">
                             <div className="overflow-hidden min-w-max">
@@ -141,9 +142,12 @@ const CarDetails = () => {
                     </div>
 
                     <div className='w-full grid gap-2 col-span-4'>
+
+                        {id && carData && (<BiddingBox vehicleId={id} carData={carData} />)}
+
                         <div className="font-bold text-2xl mb-3" ><h1> Auctions Ending Soon </h1></div>
                         <div className='w-full h-full grid gap-2 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 flex-wrap cursor-pointer'>
-                            { tempCarrDdata &&  tempCarrDdata?.map((car, index) => (
+                            {tempCarrDdata && tempCarrDdata?.map((car, index) => (
                                 <Auctioncard key={index} image={car.image} model={car.model} category={car.category} />
                             ))}
                         </div>

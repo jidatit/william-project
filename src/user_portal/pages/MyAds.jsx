@@ -52,6 +52,7 @@ const MyAds = () => {
         engine_capacity: "",
         transmission: "",
         date: "",
+        status: "active",
         user: {}
     });
 
@@ -71,6 +72,7 @@ const MyAds = () => {
             engine_type: "",
             engine_capacity: "",
             transmission: "",
+            status: "active",
             date: "",
             user: {}
         });
@@ -93,6 +95,7 @@ const MyAds = () => {
             engine_capacity: data.engine_capacity,
             transmission: data.transmission,
             date: data.date,
+            status: "active",
             user: {}
         });
     };
@@ -211,12 +214,12 @@ const MyAds = () => {
             );
 
             for (const img of deletedImagesFromStorage) {
-                const imageName = decodeURIComponent(img.file.file.split('?')[0].split('/o/')[1]); 
+                const imageName = decodeURIComponent(img.file.file.split('?')[0].split('/o/')[1]);
                 const storageRef = ref(storage, `${imageName}`);
                 await deleteObject(storageRef);
                 console.log(`Image deleted from Firebase Storage: ${imageName}`);
             }
-            
+
             currentImages = currentImages.filter(
                 img => !deletedImages.some(deletedImg => deletedImg.file === img.file)
             );
