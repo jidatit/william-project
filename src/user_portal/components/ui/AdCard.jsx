@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { strTruncator } from "strtoolkit"
 import Box from '@mui/material/Box';
@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
 import PickUp from '../../../assets/user_portal/pickup.png';
 import DropOf from '../../../assets/user_portal/dropof.png';
+import { db } from "../../../../db"
+import { collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
 
 const style = {
     position: 'absolute',
@@ -30,7 +32,7 @@ const styleSecond = {
     borderRadius: '12px',
 };
 
-const AdCard = ({ data, onDelete, onUpdate }) => {
+const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
 
     const navigate = useNavigate();
     const [isDeleting, setIsDeleting] = useState(false);
@@ -46,24 +48,53 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
     const [openSecond, setOpenSecond] = useState(false);
     const handleOpenSecond = () => setOpenSecond(true);
     const handleCloseSecond = () => setOpenSecond(false);
+    const [bidsDetails, setBidsDetails] = useState([]);
+    const [vehicleId, setvehicleId] = useState("");
+    const [isAccepting, setIsAccepting] = useState(false);
 
-    const bidsDetails = [
-        {
-            "Bid By": "Alex Allan",
-            "Bid Amount": "$43000",
-            "Bid Time": "10/5/2024 (11:40am)"
-        },
-        {
-            "Bid By": "Shane Agar",
-            "Bid Amount": "$39000",
-            "Bid Time": "11/6/2023 (10:30pm)"
-        },
-        {
-            "Bid By": "Smith Valy",
-            "Bid Amount": "$22000",
-            "Bid Time": "22/9/2024 (08:20am)"
-        },
-    ];
+    const getBidsforVehicle = async (vehicleId) => {
+        try {
+            const bidsQuery = query(collection(db, "bids"), where("vehicleId", "==", vehicleId));
+            const querySnapshot = await getDocs(bidsQuery);
+
+            const bids = querySnapshot.docs.map(doc => {
+                const bidDate = new Date(doc.data().bidDate);
+
+                const day = String(bidDate.getDate()).padStart(2, '0');
+                const month = String(bidDate.getMonth() + 1).padStart(2, '0');
+                const year = bidDate.getFullYear();
+
+                let hours = bidDate.getHours();
+                const minutes = String(bidDate.getMinutes()).padStart(2, '0');
+                const seconds = String(bidDate.getSeconds()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+
+                const formattedTime = `${hours}:${minutes}:${seconds} ${ampm}`;
+                const formattedDate = `${day}/${month}/${year} (${formattedTime})`;
+
+                return {
+                    "Bid By": doc.data().bidder.fullname,
+                    "Bid Amount": doc.data().amount,
+                    "Bid Time": formattedDate,
+                    id: doc.id,
+                    ...doc.data(),
+                };
+            });
+
+            const sortedBids = bids.sort((a, b) => parseFloat(a.amount) - parseFloat(b.amount));
+            setBidsDetails(sortedBids.length > 5 ? sortedBids.slice(-5) : sortedBids)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getBidsforVehicle(data.id)
+        setvehicleId(data.id)
+    }, [data.id])
 
     const handleViewListing = () => {
         navigate(`/car-details/${data.id}`);
@@ -95,10 +126,32 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
         }
     };
 
-    const handleAcceptBid = () => {
-        setIsAccept(true);
-        setSeeBids(false);
-    }
+    const handleAcceptBid = async (bid) => {
+        setIsAccepting(true);
+        try {
+            const adRef = doc(db, "Ads", vehicleId);
+
+            await updateDoc(adRef, {
+                status: "sold",
+                accepted_bid: bid
+            });
+            onFetch();
+            setIsAccept(true);
+            setSeeBids(false);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsAccepting(false);
+        }
+    };
+
+    useEffect(() => {
+        if (data.accepted_bid && data.status === "sold") {
+            setSeeBids(false)
+            setIsAccept(true)
+        }
+    }, [data, isAccept, seeBids])
+
 
     const availabilityUpdate = () => {
         setAvailabilityUpdated(true);
@@ -132,7 +185,7 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                                 <p> {data.engine_capacity + ' cc'} </p>
                             </div>
 
-                            {isAccept === false ? (
+                            {isAccept === false && (
                                 <>
                                     <div className='w-full xl:w-[60%] flex flex-col md:flex-row lg:flex-row justify-center items-center gap-1'>
                                         {seeBids === false ? (
@@ -169,12 +222,14 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                                         </button>
                                     </div>
                                 </>
-                            ) : (
+                            )}
+
+                            {isAccept === true && (
                                 <>
                                     <div className='w-full xl:w-[70%] flex flex-col md:flex-row lg:flex-row justify-center items-center gap-1'>
                                         <div
                                             className='w-full lg:w-[55%] text-black font-medium rounded-[30px] px-4 py-2'>
-                                            You have accept the bid of $24,500
+                                            {data.accepted_bid && (<span>You have accept the bid of ${data.accepted_bid.amount}</span>)}
                                         </div>
 
                                         {availabilityUpdated === false ? (
@@ -198,7 +253,7 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                 </div>
 
 
-                {seeBids === true ? (
+                {seeBids && !isAccept && (
                     <>
                         {bidsDetails.map((bid, index) => (
                             <div key={index} className='w-full h-auto flex flex-col lg:flex-row gap-5 py-6 px-10 border-t-2 border-gray-200'>
@@ -215,15 +270,13 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                                     <div className=' text-base' > {bid["Bid Time"]} </div>
                                 </div>
                                 <div className='basis-2/5 flex justify-center items-center'>
-                                    <button onClick={handleAcceptBid} className='bg-[#FFA90A] w-auto text-white font-bold rounded-[30px] px-6 py-2'>
+                                    <button disabled={isAccepting} onClick={() => handleAcceptBid(bid)} className='bg-[#FFA90A] w-auto text-white font-bold rounded-[30px] px-6 py-2'>
                                         Accept Bid
                                     </button>
                                 </div>
                             </div>
                         ))}
                     </>
-                ) : (
-                    <div></div>
                 )}
 
                 <Modal
