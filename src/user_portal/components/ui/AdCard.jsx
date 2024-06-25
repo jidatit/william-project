@@ -37,6 +37,7 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [seeBids, setSeeBids] = useState(false);
     const [isAccept, setIsAccept] = useState(false);
+    const [availabilityUpdated, setAvailabilityUpdated] = useState(false);
 
     const [openFirst, setOpenFirst] = useState(false);
     const handleOpenFirst = () => setOpenFirst(true);
@@ -97,6 +98,12 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
     const handleAcceptBid = () => {
         setIsAccept(true);
         setSeeBids(false);
+    }
+
+    const availabilityUpdate = () => {
+        setAvailabilityUpdated(true);
+        setOpenSecond(false);
+        setOpenFirst(false);
     }
 
     return (
@@ -169,11 +176,20 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                                             className='w-full lg:w-[55%] text-black font-medium rounded-[30px] px-4 py-2'>
                                             You have accept the bid of $24,500
                                         </div>
-                                        <button
-                                            onClick={handleOpenFirst}
-                                            className='bg-[#FFA90A] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
-                                            Add Vehicle Availability
-                                        </button>
+
+                                        {availabilityUpdated === false ? (
+                                            <button
+                                                onClick={handleOpenFirst}
+                                                className='bg-[#FFA90A] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                                                Add Vehicle Availability
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className='bg-[#2FB500] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                                                Availability Updated
+                                            </button>
+
+                                        )}
                                     </div>
                                 </>
                             )}
@@ -234,7 +250,7 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                 >
                     <Box sx={styleSecond}>
                         <div className='w-full relative flex flex-col justify-center items-center gap-6 py-14 px-8' >
-                            <div className='w-full absolute right-0 top-0 flex justify-end items-end pt-6 pr-6 cursor-pointer'> 
+                            <div className='w-full absolute right-0 top-0 flex justify-end items-end pt-6 pr-6 cursor-pointer'>
                                 <CloseIcon onClick={handleCloseSecond} />
                             </div>
                             <h1 className='font-bold text-xl' > Vehicle Availability </h1>
@@ -246,6 +262,7 @@ const AdCard = ({ data, onDelete, onUpdate }) => {
                                 <label htmlFor="address"> Address </label>
                                 <TextField id="address" type='text' fullWidth />
                                 <button
+                                    onClick={availabilityUpdate}
                                     className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'>
                                     Upload Availability
                                 </button>
