@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from "../../../AuthContext";
 import { collection, getDocs, addDoc, query, where, onSnapshot } from "firebase/firestore";
 import { db } from '../../../db';
@@ -89,9 +89,20 @@ const BiddingBox = ({ vehicleId, carData }) => {
         }, 2000);
     }
 
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.scrollTo({
+                top: containerRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    }, [vehicleBids]);
+
     return (
         <>
-            <div className='w-full p-2 flex flex-col justify-start items-center max-h-[371px] overflow-y-auto min-h-[370px] bg-white border border-gray-200 rounded-lg shadow-lg'>
+            <div ref={containerRef} className='w-full p-2 flex flex-col justify-start items-center max-h-[371px] overflow-y-auto min-h-[370px] bg-white border border-gray-200 rounded-lg shadow-lg'>
                 <ToastContainer />
                 {vehicleBids.length > 0 ? (
                     vehicleBids.map((bid, index) => (
