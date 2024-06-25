@@ -150,7 +150,11 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
             setSeeBids(false)
             setIsAccept(true)
         }
-    }, [data, isAccept, seeBids])
+        else{
+            setSeeBids(true)
+            setIsAccept(false)
+        }
+    }, [data])
 
 
     const availabilityUpdate = () => {
