@@ -30,7 +30,6 @@ const EditProfile = () => {
             });
             console.log("User Data Updated Successfully");
             toast.success("User Data Updated Successfully");
-            setIsEditing(false);
         } catch (error) {
             console.log("Error Updating Data: ", error);
             toast.error("Error Updating User Data");

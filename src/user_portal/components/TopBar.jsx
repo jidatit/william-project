@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import usericon from "../../assets/web/s3.png"
 import { Link, useLocation } from 'react-router-dom';
+import { db, storage } from '../../../db';
+import { doc, getDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const TopBar = () => {
+
     const location = useLocation();
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const [userName, setUserName] = useState('');
 
     const pages = [
         { name: 'My Ads', path: '/user_portal' },
@@ -21,19 +28,41 @@ const TopBar = () => {
         return `${baseClasses} ${location.pathname === path ? activeClasses : inactiveClasses}`;
     };
 
+    const fetchUserData = async () => {
+        try {
+            const authuserDoc = doc(db, 'users', user.uid);
+            const userDoc = await getDoc(authuserDoc);
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                console.log("User Data : ", userData);
+                setUserName(userData.fullname);
+            } else {
+                console.log("No Such Document Exists");
+            }
+        } catch (error) {
+            console.log("Error Fetching User Data : ", error);
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            fetchUserData();
+        }
+    })
+
     return (
         <div className='w-[80%] mt-[50px] mb-[50px] shadow-xl rounded-md flex flex-col justify-center items-center bg-white'>
-            <div className='w-[80%] p-5 flex flex-row justify-start gap-2 items-center'>
+            <div className='w-[80%] p-5 flex flex-row justify-start gap-6 items-center'>
                 <img className='rounded-full w-[100px] h-[100px]' src={usericon} alt="User Icon" />
                 <div className='flex flex-col justify-center items-start gap-1'>
-                    <p className='font-bold text-[22px]'>Alex Allan</p>
+                    <p className='font-bold text-[22px]'> { userName !== '' ? userName : '' } </p>
                     <p className='font-light text-sm'>Member Since May 6th, 2024</p>
                 </div>
             </div>
-            <div className='w-full shadow-xl rounded-md bg-white grid lg:grid-cols-5'>
+            <div className='w-full shadow-xs border-1 border-gray-200 bg-white grid lg:grid-cols-5'>
                 {pages.map((page, index) => (
                     <Link key={index} to={page.path}>
-                        <div className={`${getButtonClasses(page.path)} ${index === 0 ? 'rounded-l-md' : ''} ${index === pages.length - 1 ? 'rounded-r-md' : ''}`}>
+                        <div className={`${getButtonClasses(page.path)} ${index === 0 ? 'rounded-l-md' : ''} ${index === pages.length - 1 ? 'rounded-r-md' : ''} border-r-1 border-gray-200`}>
                             <p className='text-center font-semibold'>{page.name}</p>
                         </div>
                     </Link>

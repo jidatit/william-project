@@ -12,7 +12,7 @@ import { useAuth } from '../AuthContext'
 import Users from './admin_portal/pages/Users'
 import CarDetails from './web/pages/CarDetails'
 import CarListing from './web/pages/CarListing'
-
+import BidsWon from './user_portal/pages/BidsWon'
 import MyAds from './user_portal/pages/MyAds'
 import OngoingBids from './user_portal/pages/OngoingBids'
 import EditProfile from './user_portal/pages/EditProfile'
@@ -45,9 +45,10 @@ function App() {
 
           <Route path='/user_portal' element={<UserLayout />}>
             <Route index element={<MyAds />} />
+            <Route path='ongoing-bids' element={<OngoingBids />} />
+            <Route path='bids-won' element={<BidsWon />} />
             <Route path='edit-profile' element={<EditProfile />} />
             <Route path='change-password' element={<ChangePassword />} />
-            <Route path='ongoing-bids' element={<OngoingBids />} />
             <Route path='logout' element={<Logout />} />
           </Route>
 
