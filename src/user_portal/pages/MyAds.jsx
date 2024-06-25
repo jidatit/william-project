@@ -325,7 +325,7 @@ const MyAds = () => {
 
                 <div className='w-full flex flex-col mb-[50px] justify-center items-center gap-3'>
                     {MyAds && MyAds.map((ad, index) => (
-                        <AdCard key={index} data={ad} onDelete={deleteAd} onUpdate={updateHandleOpen} />
+                        <AdCard key={index} data={ad} onDelete={deleteAd} onUpdate={updateHandleOpen} onFetch={fetchMyAds} />
                     ))}
                 </div>
 
