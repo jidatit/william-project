@@ -15,6 +15,9 @@ const BiddingBox = ({ vehicleId, carData }) => {
     const [Loading, setLoading] = useState(false);
     const { setDaysLeft, setHighestBid, calculateDaysLeft, status, setBidslen } = useListing();
 
+    const [currentUserId, setCurrentUserId] = useState('');
+    const [currentUserAd, setCurrentUserAd] = useState('');
+
     useEffect(() => {
         const lastBid = vehicleBids.length > 0 ? vehicleBids[vehicleBids.length - 1].amount : carData.price;
         setHighestBid(lastBid);
@@ -100,6 +103,15 @@ const BiddingBox = ({ vehicleId, carData }) => {
         }
     }, [vehicleBids]);
 
+    useEffect(() => {
+        if (carData && currentUser) {
+            console.log("Car Data : ",carData);
+            console.log("Current User Id : ", currentUser.uid);
+            console.log("Ad ID : ", vehicleId);
+        }
+    }, [carData, currentUser, vehicleId]);
+    
+
     return (
         <>
             <div ref={containerRef} className='w-full p-2 flex flex-col justify-start items-center max-h-[371px] overflow-y-auto min-h-[370px] bg-white border border-gray-200 rounded-lg shadow-lg'>
@@ -112,8 +124,8 @@ const BiddingBox = ({ vehicleId, carData }) => {
                     <p className='font-semibold italic'>No bids currently in place</p>
                 )}
             </div>
-
-            {carData && currentUser && status === "active" && (
+            {/* && carData.user.uid !== currentUser.uid */}
+            {carData && currentUser &&  status === "active" && (
                 <div className='w-full flex-row justify-center items-center gap-1'>
                     <TextField type='number' disabled={Loading} value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} className='w-full md:w-[70%] outline-none focus:outline-none' placeholder='Type amount of your bid here!' />
                     <button onClick={() => handleMakeBid(parseFloat(bidAmount))} type="button" className="focus:outline-none text-white md:w-[30%] w-full md:h-full bg-[#FFA90A] hover:bg-yellow-500 focus:ring-yellow-300 font-medium text-sm px-5 py-2.5">

@@ -34,13 +34,12 @@ const TopBar = () => {
             const userDoc = await getDoc(authuserDoc);
             if (userDoc.exists()) {
                 const userData = userDoc.data();
-                console.log("User Data : ", userData);
                 setUserName(userData.fullname);
             } else {
                 console.log("No Such Document Exists");
             }
         } catch (error) {
-            console.log("Error Fetching User Data : ", error);
+            console.error("Error Fetching User Data : ", error);
         }
     }
 

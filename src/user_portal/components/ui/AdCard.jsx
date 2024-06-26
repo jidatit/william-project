@@ -150,8 +150,8 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
             setSeeBids(false)
             setIsAccept(true)
         }
-        else{
-            setSeeBids(true)
+        else {
+            setSeeBids(false)
             setIsAccept(false)
         }
     }, [data])
@@ -247,7 +247,6 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                                 className='bg-[#2FB500] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
                                                 Availability Updated
                                             </button>
-
                                         )}
                                     </div>
                                 </>
