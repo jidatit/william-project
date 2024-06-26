@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import usericon from "../../assets/web/s3.png"
+import usericon from "../../assets/user_portal/placeholder.jpg"
 import { Link, useLocation } from 'react-router-dom';
 import { db, storage } from '../../../db';
 import { doc, getDoc } from 'firebase/firestore';
@@ -52,7 +52,7 @@ const TopBar = () => {
     return (
         <div className='w-[80%] mt-[50px] mb-[50px] shadow-xl rounded-md flex flex-col justify-center items-center bg-white'>
             <div className='w-[80%] p-5 flex flex-row justify-start gap-6 items-center'>
-                <img className='rounded-full w-[100px] h-[100px]' src={usericon} alt="User Icon" />
+                <img className='rounded-full w-[100px] h-[100px] border-2 border-gray-300' src={usericon} alt="User Icon" />
                 <div className='flex flex-col justify-center items-start gap-1'>
                     <p className='font-bold text-[22px]'> { userName !== '' ? userName : '' } </p>
                     <p className='font-light text-sm'>Member Since May 6th, 2024</p>
