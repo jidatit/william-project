@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import placeholderImage from '../../assets/user_portal/carcar.jpg'
 import WonLabel from '../../assets/user_portal/wonlabel.png';
@@ -7,6 +7,9 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
+import { db } from "../../../db"
+import { query, collection, getDocs, where } from 'firebase/firestore';
+import { useAuth } from "../../../AuthContext"
 
 const styleFirst = {
     position: 'absolute',
@@ -34,6 +37,9 @@ const styleSecond = {
 
 const BidsWon = () => {
 
+    const { currentUser } = useAuth()
+    const [BidsWonData, setBidsWonData] = useState([]);
+
     const [openFirst, setOpenFirst] = useState(false);
     const handleOpenFirst = () => setOpenFirst(true);
     const handleCloseFirst = () => setOpenFirst(false);
@@ -58,62 +64,82 @@ const BidsWon = () => {
         setOpenFirst(false);
     }
 
+    const fetchMyBidsWonData = async () => {
+        try {
+            const bidsQuery = query(collection(db, "Ads"), where("accepted_bid.bidder.email", "==", currentUser.data.email));
+            const querySnapshot = await getDocs(bidsQuery);
+
+            const bids = querySnapshot.docs.map(doc => doc.data())
+            setBidsWonData(bids)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchMyBidsWonData()
+    }, [])
+
     return (
         <>
             <div className="w-[80%] relative flex flex-col justify-start mb-10 mx-auto bg-white rounded-xl shadow-md border-2 border-gray-200">
 
-                <div className='w-full flex flex-col lg:flex-row justify-start items-start gap-5 p-3' >
 
-                    <div className="w-full lg:w-fit h-full bg-white ">
-                        <img src={placeholderImage} alt="tailwind logo" className="rounded-xl w-full lg:min-w-[260px] h-auto lg:h-[180px] cursor-pointer" />
-                    </div>
 
-                    <div className="w-full bg-white flex flex-col space-y-2 p-3">
-                        <div className=' w-full relative flex flex-row justify-between items-center' >
-                            <h3 className="font-bold text-gray-800 lg:text-2xl text-md">BMW E46</h3>
-                            <img className='w-40 h-auto absolute right-0 mr-[-1.50rem] ' src={WonLabel} alt="Won Label" />
-                            <p className='absolute right-0 text-white text-xs pr-1' > You Won This Bid </p>
+                {BidsWonData && BidsWonData?.map((bid, index) => (
+                    <div key={index} className='w-full flex flex-col lg:flex-row justify-start items-start gap-5 p-3' >
+
+                        <div className="w-full lg:w-fit h-full bg-white ">
+                            <img src={bid.images[0].file} alt="tailwind logo" className="rounded-xl w-full lg:min-w-[260px] h-auto lg:h-[180px] cursor-pointer" />
                         </div>
-                        <p className="lg:text-lg text-gray-500 text-base"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo adipisci accusamus ullam consequatur, sit odio, earum, dolor quam quaerat voluptates expedita. Aliquam rerum ut perferendis tenetur, totam aperiam. Aliquid, reprehenderit.</p>
-                        <p className="text-xl font-black text-gray-800">
-                            <span className="text-[#FFA90A] text-base font-semibold"> Islamabad</span>
-                        </p>
 
-                        <div className='w-full flex flex-col xl:flex-row gap-3 lg:gap-4 xl:gap-0 xl:justify-between xl:items-center'>
-                            <div className='w-full xl:w-[40%] flex flex-row gap-[10px] lg:gap-[20px] justify-center lg:justify-start items-center'>
-                                <p> 2022 </p>
-                                |
-                                <p> 180,000 Km </p>
-                                |
-                                <p> 1500 cc </p>
+                        <div className="w-full bg-white flex flex-col space-y-2 p-3">
+                            <div className=' w-full relative flex flex-row justify-between items-center' >
+                                <h3 className="font-bold text-gray-800 lg:text-2xl text-md">{bid.model_name}</h3>
+                                <img className='w-40 h-auto absolute right-0 mr-[-1.50rem] ' src={WonLabel} alt="Won Label" />
+                                <p className='absolute right-0 text-white text-xs pr-1' > You Won This Bid </p>
                             </div>
+                            <p className="lg:text-lg text-gray-500 text-base">{bid.description}</p>
+                            <p className="text-xl font-black text-gray-800">
+                                <span className="text-[#FFA90A] text-base font-semibold">{bid.location}</span>
+                            </p>
 
-                            <div className='w-full xl:w-[60%] flex flex-col md:flex-row lg:flex-row justify-center items-center gap-2'>
-                                <div className='basis-1/3 flex flex-col justify-center items-center gap-2 lg:gap-0'>
-                                    <div className='font-medium text-xl' > Your Bid</div>
-                                    <div className=' text-base' > $23000 </div>
+                            <div className='w-full flex flex-col xl:flex-row gap-3 lg:gap-4 xl:gap-0 xl:justify-between xl:items-center'>
+                                <div className='w-full xl:w-[40%] flex flex-row gap-[10px] lg:gap-[20px] justify-center lg:justify-start items-center'>
+                                    <p> {bid.model_year} </p>
+                                    |
+                                    <p> {bid.mileage_km} Km </p>
+                                    |
+                                    <p> {bid.engine_capacity} cc </p>
                                 </div>
-                                {confirmRequest === false ? (
+
+                                <div className='w-full xl:w-[60%] flex flex-col md:flex-row lg:flex-row justify-center items-center gap-2'>
+                                    <div className='basis-1/3 flex flex-col justify-center items-center gap-2 lg:gap-0'>
+                                        <div className='font-medium text-xl' > Your Bid</div>
+                                        <div className=' text-base' > ${bid.accepted_bid.amount} </div>
+                                    </div>
+                                    {confirmRequest === false ? (
+                                        <button
+                                            onClick={handleOpenFirst}
+                                            className='basis-1/3 bg-[#FFA90A] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-6 py-2'>
+                                            See Availability
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className='basis-[40%] bg-[#2FB500] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-6 py-2'>
+                                            Change Requested
+                                        </button>
+                                    )}
                                     <button
-                                        onClick={handleOpenFirst}
-                                        className='basis-1/3 bg-[#FFA90A] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-6 py-2'>
-                                        See Availability
+                                        onClick={handleOpenSecond}
+                                        className='basis-1/3 bg-black w-full lg:w-[32%] text-white font-bold rounded-[30px] px-4 py-2'>
+                                        Make Payment
                                     </button>
-                                ) : (
-                                    <button
-                                        className='basis-[40%] bg-[#2FB500] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-6 py-2'>
-                                        Change Requested
-                                    </button>
-                                )}
-                                <button
-                                    onClick={handleOpenSecond}
-                                    className='basis-1/3 bg-black w-full lg:w-[32%] text-white font-bold rounded-[30px] px-4 py-2'>
-                                    Make Payment
-                                </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                ))}
 
                 <Modal
                     open={openFirst}
