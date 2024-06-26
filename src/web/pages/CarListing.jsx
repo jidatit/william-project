@@ -17,9 +17,14 @@ const CarListing = () => {
             const Adsref = collection(db, 'Ads');
             const querySnapshot = await getDocs(Adsref);
             const adsData = [];
+
             querySnapshot.forEach((doc) => {
-                adsData.push({ id: doc.id, ...doc.data() });
+                const data = { id: doc.id, ...doc.data() };
+                if (data.status !== "sold") {
+                    adsData.push(data);
+                }
             });
+
             setCarsData(adsData);
         } catch (error) {
             console.error('Error fetching ads:', error);
