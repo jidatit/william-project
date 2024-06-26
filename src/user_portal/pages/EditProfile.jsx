@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db } from '../../../db';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import EditOffOutlinedIcon from '@mui/icons-material/EditOffOutlined';
@@ -12,6 +13,7 @@ const EditProfile = () => {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
     const [isUpdating, setIsUpdating] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -23,11 +25,21 @@ const EditProfile = () => {
         try {
             setIsUpdating(true);
             const authUserDoc = doc(db, 'users', user.uid);
-            await updateDoc(authUserDoc, {
+
+            let updatedData = {
                 fullname: fullName,
                 email: email,
                 phoneNumber: phoneNumber,
-            });
+            };
+
+            if (profileImage) {
+                const storage = getStorage();
+                const storageRef = ref(storage, `profileImages/${user.uid}`);
+                await uploadBytes(storageRef, profileImage);
+                const imageURL = await getDownloadURL(storageRef);
+                updatedData = { ...updatedData, profileImage: imageURL };
+            }
+            await updateDoc(authUserDoc, updatedData);
             console.log("User Data Updated Successfully");
             toast.success("User Data Updated Successfully");
         } catch (error) {
@@ -48,6 +60,7 @@ const EditProfile = () => {
                 setFullName(userData.fullname);
                 setEmail(userData.email);
                 setPhoneNumber(userData.phoneNumber);
+                setProfileImage(userData.profileImage || null);
             } else {
                 console.log("No such document!");
             }
@@ -69,7 +82,7 @@ const EditProfile = () => {
                 <div className='w-[85%] lg:w-[70%] mb-10 relative flex flex-row justify-center items-center' >
                     <div className='font-semibold text-2xl' > Edit Profile </div>
                     <button className='cursor-pointer absolute right-0 text-[#FFA90A] hover:text-black' onClick={() => setIsEditing(!isEditing)}>
-                        {isEditing ? <EditOffOutlinedIcon sx={{ fontSize : '40px' }} /> : <CreateOutlinedIcon sx={{ fontSize : '40px' }} />}
+                        {isEditing ? <EditOffOutlinedIcon sx={{ fontSize: '40px' }} /> : <CreateOutlinedIcon sx={{ fontSize: '40px' }} />}
                     </button>
                 </div>
                 <form className='w-[85%] lg:w-[70%] flex flex-col justify-center items-center gap-4' onSubmit={handleSubmit}>
@@ -102,6 +115,27 @@ const EditProfile = () => {
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         fullWidth
                         disabled={!isEditing}
+                    />
+                    <TextField
+                        id="userimage"
+                        name="userimage"
+                        type='file'
+                        accept="image/*"
+                        onChange={(e) => setProfileImage(e.target.files[0])}
+                        fullWidth
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        inputProps={{
+                            style: {
+                                padding: '10px 14px',
+                                border: '1px solid #ced4da',
+                                borderRadius: '4px',
+                                backgroundColor: '#fff',
+                                cursor: isEditing ? 'pointer' : 'not-allowed',
+                            },
+                            disabled: !isEditing,
+                        }}
                     />
                     {isEditing && (
                         <button
