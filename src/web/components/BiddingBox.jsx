@@ -15,9 +15,6 @@ const BiddingBox = ({ vehicleId, carData }) => {
     const [Loading, setLoading] = useState(false);
     const { setDaysLeft, setHighestBid, calculateDaysLeft, status, setBidslen } = useListing();
 
-    const [currentUserId, setCurrentUserId] = useState('');
-    const [currentUserAd, setCurrentUserAd] = useState('');
-
     useEffect(() => {
         const lastBid = vehicleBids.length > 0 ? vehicleBids[vehicleBids.length - 1].amount : carData.price;
         setHighestBid(lastBid);
@@ -103,14 +100,20 @@ const BiddingBox = ({ vehicleId, carData }) => {
         }
     }, [vehicleBids]);
 
+    const [currentUserId, setCurrentUserId] = useState('');
+    const [currentUserAd, setCurrentUserAd] = useState('');
+
     useEffect(() => {
-        if (carData && currentUser) {
-            console.log("Car Data : ",carData);
+        if ((carData.user) && (currentUser)) {
+            console.log("Car Data : ", carData);
+            console.log("Ad of user : ", carData.user);
+            console.log("Ad of user Id : ", carData.user.uid);
+            setCurrentUserAd(carData.user.uid);
             console.log("Current User Id : ", currentUser.uid);
+            setCurrentUserId(currentUser.uid);
             console.log("Ad ID : ", vehicleId);
         }
     }, [carData, currentUser, vehicleId]);
-    
 
     return (
         <>
@@ -124,20 +127,26 @@ const BiddingBox = ({ vehicleId, carData }) => {
                     <p className='font-semibold italic'>No bids currently in place</p>
                 )}
             </div>
-            {/* && carData.user.uid !== currentUser.uid */}
-            {carData && currentUser &&  status === "active" && (
+
+            {carData && currentUser && status === "active" && (
                 <div className='w-full flex-row justify-center items-center gap-1'>
-                    <TextField type='number' disabled={Loading} value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} className='w-full md:w-[70%] outline-none focus:outline-none' placeholder='Type amount of your bid here!' />
-                    <button onClick={() => handleMakeBid(parseFloat(bidAmount))} type="button" className="focus:outline-none text-white md:w-[30%] w-full md:h-full bg-[#FFA90A] hover:bg-yellow-500 focus:ring-yellow-300 font-medium text-sm px-5 py-2.5">
-                        {Loading ? (
-                            <BeatLoader
-                                color={"#000000"}
-                                loading={Loading}
-                                aria-label="Loading Spinner"
-                                data-testid="loader"
-                            />
-                        ) : ("Place Bid")}
-                    </button>
+                    {currentUserId === currentUserAd ? (
+                        <div> You cannot bid on your own Ad </div>
+                    ) : (
+                        <>
+                            <TextField type='number' disabled={Loading} value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} className='w-full md:w-[70%] outline-none focus:outline-none' placeholder='Type amount of your bid here!' />
+                            <button onClick={() => handleMakeBid(parseFloat(bidAmount))} type="button" className="focus:outline-none text-white md:w-[30%] w-full md:h-full bg-[#FFA90A] hover:bg-yellow-500 focus:ring-yellow-300 font-medium text-sm px-5 py-2.5">
+                                {Loading ? (
+                                    <BeatLoader
+                                        color={"#000000"}
+                                        loading={Loading}
+                                        aria-label="Loading Spinner"
+                                        data-testid="loader"
+                                    />
+                                ) : ("Place Bid")}
+                            </button>
+                        </>
+                    )}
                 </div>
             )}
         </>
