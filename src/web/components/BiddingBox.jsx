@@ -83,7 +83,9 @@ const BiddingBox = ({ vehicleId, carData }) => {
                 makeAbidforVehicleId(bid);
                 setLoading(false);
             } else {
-                toast.error("Bid must be higher than the last bid or the car's price.");
+                toast.error("Bid must be higher than the last bid or the car's price.", {
+                    autoClose: 1000
+                });
                 setLoading(false);
             }
         }, 2000);
@@ -118,7 +120,9 @@ const BiddingBox = ({ vehicleId, carData }) => {
     return (
         <>
             <div ref={containerRef} className='w-full p-2 flex flex-col justify-start items-center max-h-[371px] overflow-y-auto min-h-[370px] bg-white border border-gray-200 rounded-lg shadow-lg'>
-                <ToastContainer />
+                <ToastContainer
+                    autoClose={1000}
+                />
                 {vehicleBids.length > 0 ? (
                     vehicleBids.map((bid, index) => (
                         <BidBadge key={index} bid={bid} />

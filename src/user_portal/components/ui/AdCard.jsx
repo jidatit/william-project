@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import PickUp from '../../../assets/user_portal/pickup.png';
 import DropOf from '../../../assets/user_portal/dropof.png';
 import { db } from "../../../../db"
-import { collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, updateDoc, doc } from "firebase/firestore";
 
 const style = {
     position: 'absolute',
@@ -40,14 +40,113 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
     const [seeBids, setSeeBids] = useState(false);
     const [isAccept, setIsAccept] = useState(false);
     const [availabilityUpdated, setAvailabilityUpdated] = useState(false);
+    const [availType, setavailType] = useState("");
+
 
     const [openFirst, setOpenFirst] = useState(false);
     const handleOpenFirst = () => setOpenFirst(true);
     const handleCloseFirst = () => setOpenFirst(false);
 
     const [openSecond, setOpenSecond] = useState(false);
-    const handleOpenSecond = () => setOpenSecond(true);
-    const handleCloseSecond = () => setOpenSecond(false);
+
+
+    const [openThird, setOpenThird] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedAvailabilityData, setEditedAvailabilityData] = useState({
+        date: '',
+        time: '',
+        address: ''
+    });
+
+
+    const handleCloseThird = () => {
+        setOpenThird(false);
+        setIsEditing(false);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditedAvailabilityData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
+
+    const handleRequestChange = async () => {
+        try {
+            const availabilityQuery = query(collection(db, "availability"), where("vehicleId", "==", data.id));
+            const querySnapshot = await getDocs(availabilityQuery);
+            if (!querySnapshot.empty) {
+                const availabilityDoc = querySnapshot.docs[0];
+                const availabilityRef = doc(db, "availability", availabilityDoc.id);
+                await updateDoc(availabilityRef, editedAvailabilityData);
+            } else {
+                console.log("Availability data not found for vehicleId:", data.id);
+                return;
+            }
+
+            const adRef = doc(db, "Ads", data.id);
+            await updateDoc(adRef, {
+                buyer_avail_req: false,
+            });
+
+            setEditedAvailabilityData({ ...editedAvailabilityData, buyer_avail_req: false });
+            setIsEditing(false);
+            setOpenThird(false);
+            onFetch();
+
+        } catch (error) {
+            console.error("Error updating availability:", error);
+        }
+    };
+
+
+    const handleLockAvailability = async () => {
+        try {
+            const adRef = doc(db, "Ads", data.id);
+            await updateDoc(adRef, {
+                editedAvailabilityData,
+                avail_lock: true,
+                buyer_avail_req: false
+            });
+            onFetch()
+            setOpenThird(false);
+        } catch (error) {
+            console.log("Error locking availability")
+            setOpenThird(false);
+        }
+    };
+
+
+    const handleopenthird = async () => {
+        try {
+            const availabilityQuery = query(collection(db, "availability"), where("vehicleId", "==", data.id));
+            const querySnapshot = await getDocs(availabilityQuery);
+            if (!querySnapshot.empty) {
+                const availabilityData = querySnapshot.docs[0].data();
+                setEditedAvailabilityData({
+                    date: availabilityData.date || '',
+                    time: availabilityData.time || '',
+                    address: availabilityData.address || ''
+                });
+                setIsEditing(true);
+            } else {
+                console.log("Availability data not found for vehicleId:", data.id);
+            }
+            setOpenThird(true);
+        } catch (error) {
+            console.error("Error fetching availability:", error);
+        }
+    }
+
+    const handleOpenSecond = (type) => {
+        setOpenSecond(true)
+        setavailType(type)
+    };
+    const handleCloseSecond = () => {
+        setOpenSecond(false)
+        setavailType("")
+    };
     const [bidsDetails, setBidsDetails] = useState([]);
     const [vehicleId, setvehicleId] = useState("");
     const [isAccepting, setIsAccepting] = useState(false);
@@ -154,19 +253,48 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
             setSeeBids(false)
             setIsAccept(false)
         }
+        if (data.avail_status === "updated") {
+            setAvailabilityUpdated(true)
+        }
     }, [data])
 
+    const [AvailabilityForm, setAvailabilityForm] = useState({
+        date: '',
+        time: '',
+        address: ''
+    });
 
-    const availabilityUpdate = () => {
-        setAvailabilityUpdated(true);
-        setOpenSecond(false);
-        setOpenFirst(false);
+    const handleAvailabilityFormChange = (e) => {
+        const { name, value } = e.target;
+        setAvailabilityForm((prev) => ({
+            ...prev,
+            [name]: value,
+            vehicleId: data.id
+        }));
+    };
+
+    const availabilityUpdate = async () => {
+        try {
+            await addDoc(collection(db, 'availability'), { ...AvailabilityForm, availType });
+            const adRef = doc(db, "Ads", vehicleId);
+            await updateDoc(adRef, {
+                avail_status: "updated"
+            });
+            onFetch();
+            setOpenSecond(false);
+            setOpenFirst(false);
+            setAvailabilityUpdated(true);
+            console.log("Availability added!")
+        } catch (error) {
+            console.log("Error setting availability!")
+            setOpenSecond(false);
+            setOpenFirst(false);
+        }
     }
 
     return (
         <>
             <div className="w-full relative flex flex-col justify-start mx-auto bg-white rounded-xl shadow-md border-2 border-gray-200">
-
                 <div className='w-full flex flex-col lg:flex-row justify-start items-start gap-5 p-3' >
 
                     <div className="w-full lg:w-fit h-full bg-white ">
@@ -236,18 +364,42 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                             {data.accepted_bid && (<span>You have accept the bid of ${data.accepted_bid.amount}</span>)}
                                         </div>
 
-                                        {availabilityUpdated === false ? (
+                                        {data.avail_lock && (
                                             <button
-                                                onClick={handleOpenFirst}
-                                                className='bg-[#FFA90A] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
-                                                Add Vehicle Availability
-                                            </button>
-                                        ) : (
-                                            <button
-                                                className='bg-[#2FB500] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
-                                                Availability Updated
+                                                className='bg-[#000000] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                                                Pay Now
                                             </button>
                                         )}
+
+                                        {!data.avail_lock && !data.buyer_avail_req && (
+                                            availabilityUpdated === false ? (
+                                                <button
+                                                    onClick={handleOpenFirst}
+                                                    className='bg-[#FFA90A] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'
+                                                >
+                                                    Add Vehicle Availability
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className='bg-[#2FB500] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'
+                                                >
+                                                    Availability Updated
+                                                </button>
+                                            )
+                                        )}
+
+                                        {data.buyer_avail_req && (
+                                            <>
+                                                <p>Buyer Requested change for availability</p>
+                                                <button
+                                                    onClick={handleopenthird}
+                                                    className='bg-[#FFA90A] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'
+                                                >
+                                                    View
+                                                </button>
+                                            </>
+                                        )}
+
                                     </div>
                                 </>
                             )}
@@ -288,11 +440,11 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                 >
                     <Box sx={style}>
                         <div className='flex flex-row justify-evenly items-center py-24' >
-                            <div onClick={handleOpenSecond} className='flex flex-col justify-center items-center cursor-pointer'>
+                            <div onClick={() => handleOpenSecond("pickup")} className='flex flex-col justify-center items-center cursor-pointer'>
                                 <img src={PickUp} alt="Pick Up" />
                                 <h2> Pick up </h2>
                             </div>
-                            <div onClick={handleOpenSecond} className='flex flex-col justify-center items-center cursor-pointer' >
+                            <div onClick={() => handleOpenSecond("dropof")} className='flex flex-col justify-center items-center cursor-pointer' >
                                 <img src={DropOf} alt="Drop Of" />
                                 <h2> Drop Of </h2>
                             </div>
@@ -309,14 +461,14 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                             <div className='w-full absolute right-0 top-0 flex justify-end items-end pt-6 pr-6 cursor-pointer'>
                                 <CloseIcon onClick={handleCloseSecond} />
                             </div>
-                            <h1 className='font-bold text-xl' > Vehicle Availability </h1>
+                            <h1 className='font-bold text-xl' > Vehicle Availability ({availType && availType || ""}) </h1>
                             <div className='w-full flex flex-col justify-start items-start gap-3 cursor-pointer'>
                                 <label htmlFor="date"> Date </label>
-                                <TextField id="date" variant="outlined" type='date' fullWidth />
+                                <TextField name="date" value={AvailabilityForm.date} onChange={handleAvailabilityFormChange} id="date" variant="outlined" type='date' fullWidth />
                                 <label htmlFor="time"> Time </label>
-                                <TextField id="time" type='time' fullWidth />
+                                <TextField name="time" value={AvailabilityForm.time} onChange={handleAvailabilityFormChange} id="time" type='time' fullWidth />
                                 <label htmlFor="address"> Address </label>
-                                <TextField id="address" type='text' fullWidth />
+                                <TextField name="address" value={AvailabilityForm.address} onChange={handleAvailabilityFormChange} id="address" type='text' fullWidth />
                                 <button
                                     onClick={availabilityUpdate}
                                     className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'>
@@ -326,6 +478,69 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                         </div>
                     </Box>
                 </Modal>
+
+
+
+                <Modal
+                    open={openThird}
+                    onClose={handleCloseThird}
+                >
+                    <Box sx={styleSecond}>
+                        <div className='w-full relative flex flex-col justify-center items-center gap-6 py-14 px-8'>
+                            <div className='w-full absolute right-0 top-0 flex justify-end items-end pt-6 pr-6 cursor-pointer'>
+                                <CloseIcon onClick={handleCloseThird} />
+                            </div>
+                            <h1 className='font-bold text-xl'>Vehicle Availability</h1>
+                            <div className='w-full flex flex-col justify-start items-start gap-3 cursor-pointer'>
+                                <label htmlFor="date">Date</label>
+                                <TextField
+                                    id="date"
+                                    name="date"
+                                    type='date'
+                                    value={editedAvailabilityData.date}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    fullWidth
+                                />
+                                <label htmlFor="time">Time</label>
+                                <TextField
+                                    id="time"
+                                    name="time"
+                                    type='time'
+                                    value={editedAvailabilityData.time}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    fullWidth
+                                />
+                                <label htmlFor="address">Address</label>
+                                <TextField
+                                    id="address"
+                                    name="address"
+                                    type='text'
+                                    value={editedAvailabilityData.address}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    fullWidth
+                                />
+                                <div className='flex gap-4'>
+                                    <button
+                                        onClick={handleRequestChange}
+                                        className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'
+                                    >
+                                        Request Change
+                                    </button>
+                                    <button
+                                        onClick={handleLockAvailability}
+                                        className='bg-[#2FB500] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'
+                                    >
+                                        Lock Availability
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </Box>
+                </Modal>
+
 
             </div>
         </>
