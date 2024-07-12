@@ -22,7 +22,7 @@ const TopBar = () => {
 
     const getButtonClasses = (path) => {
         const baseClasses = 'border-[#EEEEEE] w-full p-2 border-[2px]';
-        const activeClasses = 'bg-[#EEEEEE] text-black';
+        const activeClasses = 'bg-gray-200 text-black';
         const inactiveClasses = 'bg-white text-black';
 
         return `${baseClasses} ${location.pathname === path ? activeClasses : inactiveClasses}`;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import logo from "../../assets/Logo.png"
+import logo from "../../assets/Logo2.jpg"
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../AuthContext';
 
@@ -14,7 +14,7 @@ const Header = () => {
             <nav className="w-full sticky top-0 z-40 bg-[#000000]">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                     <p className="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src={logo} alt="Logo" />
+                        <img src={logo} alt="Logo" className='w-16 h-12 rounded-sm' />
                     </p>
                     <div className="flex md:order-2 gap-[5px] space-x-3 md:space-x-0 rtl:space-x-reverse">
 

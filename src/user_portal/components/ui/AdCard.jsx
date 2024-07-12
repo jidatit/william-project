@@ -42,15 +42,17 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
     const [availabilityUpdated, setAvailabilityUpdated] = useState(false);
     const [availType, setavailType] = useState("");
 
+    const [bidsDetails, setBidsDetails] = useState([]);
+    const [vehicleId, setvehicleId] = useState("");
+    const [isAccepting, setIsAccepting] = useState(false);
 
     const [openFirst, setOpenFirst] = useState(false);
     const handleOpenFirst = () => setOpenFirst(true);
     const handleCloseFirst = () => setOpenFirst(false);
 
     const [openSecond, setOpenSecond] = useState(false);
-
-
     const [openThird, setOpenThird] = useState(false);
+
     const [isEditing, setIsEditing] = useState(false);
     const [editedAvailabilityData, setEditedAvailabilityData] = useState({
         date: '',
@@ -58,6 +60,11 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
         address: ''
     });
 
+    const [AvailabilityForm, setAvailabilityForm] = useState({
+        date: '',
+        time: '',
+        address: ''
+    });
 
     const handleCloseThird = () => {
         setOpenThird(false);
@@ -100,7 +107,6 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
         }
     };
 
-
     const handleLockAvailability = async () => {
         try {
             const adRef = doc(db, "Ads", data.id);
@@ -109,14 +115,13 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                 avail_lock: true,
                 buyer_avail_req: false
             });
-            onFetch()
+            onFetch();
             setOpenThird(false);
         } catch (error) {
             console.log("Error locking availability")
             setOpenThird(false);
         }
     };
-
 
     const handleopenthird = async () => {
         try {
@@ -147,9 +152,6 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
         setOpenSecond(false)
         setavailType("")
     };
-    const [bidsDetails, setBidsDetails] = useState([]);
-    const [vehicleId, setvehicleId] = useState("");
-    const [isAccepting, setIsAccepting] = useState(false);
 
     const getBidsforVehicle = async (vehicleId) => {
         try {
@@ -229,12 +231,11 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
         setIsAccepting(true);
         try {
             const adRef = doc(db, "Ads", vehicleId);
-
             await updateDoc(adRef, {
                 status: "sold",
                 accepted_bid: bid
             });
-            onFetch();
+            await onFetch();
             setIsAccept(true);
             setSeeBids(false);
         } catch (error) {
@@ -257,12 +258,6 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
             setAvailabilityUpdated(true)
         }
     }, [data])
-
-    const [AvailabilityForm, setAvailabilityForm] = useState({
-        date: '',
-        time: '',
-        address: ''
-    });
 
     const handleAvailabilityFormChange = (e) => {
         const { name, value } = e.target;
@@ -309,7 +304,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                         </p>
 
                         <div className='w-full flex flex-col xl:flex-row gap-3 lg:gap-4 xl:gap-0 xl:justify-between xl:items-center'>
-                            <div className='w-full xl:w-[40%] flex flex-row gap-[10px] lg:gap-[20px] justify-center lg:justify-start items-center'>
+                            <div className='w-full xl:w-[30%] flex flex-row gap-[10px] lg:gap-[20px] justify-center lg:justify-start items-center'>
                                 <p> {data.model_year} </p>
                                 |
                                 <p> {data.mileage_km + ' km'} </p>
@@ -359,29 +354,35 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                             {isAccept === true && (
                                 <>
                                     <div className='w-full xl:w-[70%] flex flex-col md:flex-row lg:flex-row justify-center items-center gap-1'>
-                                        <div
-                                            className='w-full lg:w-[55%] text-black font-medium rounded-[30px] px-4 py-2'>
-                                            {data.accepted_bid && (<span>You have accept the bid of ${data.accepted_bid.amount}</span>)}
-                                        </div>
 
-                                        {data.avail_lock && (
-                                            <button
-                                                className='bg-[#000000] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
-                                                Pay Now
-                                            </button>
-                                        )}
+                                        <div className='w-full text-black font-medium rounded-[30px] flex lg:flex-row flex-col gap-3'>
+                                            {data.accepted_bid && (
+                                                <button
+                                                    className='bg-black w-full text-white font-bold rounded-[30px] px-4 py-2'
+                                                >
+                                                    You have accept the bid of ${data.accepted_bid.amount}
+                                                </button>
+                                            )}
+                                            {data.avail_lock && (
+                                                <button
+                                                    className='bg-black w-full lg:w-[80%] text-white font-bold rounded-[30px] px-4 py-2'
+                                                >
+                                                    Availability is Locked
+                                                </button>
+                                            )}
+                                        </div>
 
                                         {!data.avail_lock && !data.buyer_avail_req && (
                                             availabilityUpdated === false ? (
                                                 <button
                                                     onClick={handleOpenFirst}
-                                                    className='bg-[#FFA90A] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'
+                                                    className='bg-[#FFA90A] w-full lg:w-[80%] text-white font-bold rounded-[30px] px-4 py-2'
                                                 >
                                                     Add Vehicle Availability
                                                 </button>
                                             ) : (
                                                 <button
-                                                    className='bg-[#2FB500] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'
+                                                    className='bg-[#2FB500] w-full lg:w-[70%] text-white font-bold rounded-[30px] px-4 py-2'
                                                 >
                                                     Availability Updated
                                                 </button>
@@ -390,10 +391,9 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
 
                                         {data.buyer_avail_req && (
                                             <>
-                                                <p>Buyer Requested change for availability</p>
                                                 <button
                                                     onClick={handleopenthird}
-                                                    className='bg-[#FFA90A] lg:w-[45%] w-full text-white font-bold rounded-[30px] px-4 py-2'
+                                                    className='bg-[#FFA90A] w-full lg:w-[70%] text-white font-bold rounded-[30px] px-4 py-2'
                                                 >
                                                     View
                                                 </button>
@@ -404,9 +404,27 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                 </>
                             )}
                         </div>
+                        {data.buyer_avail_req && (
+                            <>
+                                <p className='text-green-900 lg:text-end text-center'>
+                                    Buyer Requested change for availability
+                                </p>
+                            </>
+                        )}
+                        {/* Add Payment Message */}
+                        {isAccept === true && (
+                            data?.accepted_bid?.payment || data?.accepted_bid?.payment === true ? (
+                                <>
+                                </>
+                            ) : (
+                                <div className='text-red-500 lg:text-end text-center'>
+                                    Buyer Payment is not received, Buyer cannot see vehicle availability.
+                                </div>
+                            )
+                        )}
+
                     </div>
                 </div>
-
 
                 {seeBids && !isAccept && (
                     <>
@@ -522,7 +540,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                     disabled={!isEditing}
                                     fullWidth
                                 />
-                                <div className='flex gap-4'>
+                                <div className='w-full flex gap-4'>
                                     <button
                                         onClick={handleRequestChange}
                                         className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'

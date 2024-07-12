@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PayPalPayment from '../components/PaypalPayment';
 import WonLabel from '../../assets/user_portal/wonlabel.png';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -40,8 +41,14 @@ const BidsWon = () => {
     const [editedAvailabilityData, setEditedAvailabilityData] = useState(null);
     const [docId, setDocId] = useState(null);
     const [confirmRequest, setConfirmRequest] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const [openFirst, setOpenFirst] = useState(false);
+    const [openSecond, setOpenSecond] = useState(false);
+
+    const [paymentAreaStatus, setPaymentAreaStatus] = useState(false);
+    const [adDocId, setAdDocId] = useState("");
+
     const handleOpenFirst = (vehicleId) => {
         fetchAvailabilityData(vehicleId);
         setOpenFirst(true);
@@ -51,12 +58,14 @@ const BidsWon = () => {
         setAvailabilityData(null);
         setEditedAvailabilityData(null);
     };
-
-    const [openSecond, setOpenSecond] = useState(false);
-    const handleOpenSecond = () => setOpenSecond(true);
-    const handleCloseSecond = () => setOpenSecond(false);
-
-    const [isEditing, setIsEditing] = useState(false);
+    const handleOpenSecond = (id) => {
+        setOpenSecond(true);
+        setAdDocId(id);
+    }
+    const handleCloseSecond = () => {
+        setOpenSecond(false);
+        fetchMyBidsWonData();
+    }
 
     const editAvailabilityRequest = () => {
         setIsEditing(true);
@@ -92,7 +101,7 @@ const BidsWon = () => {
                 AvailabilityData,
                 avail_lock: true
             });
-            fetchMyBidsWonData()
+            fetchMyBidsWonData();
             setOpenFirst(false);
         } catch (error) {
             console.log("Error locking availability")
@@ -113,6 +122,7 @@ const BidsWon = () => {
             const bidsQuery = query(collection(db, "Ads"), where("accepted_bid.bidder.email", "==", currentUser.data.email));
             const querySnapshot = await getDocs(bidsQuery);
             const bids = querySnapshot.docs.map(doc => doc.data());
+            console.log("Bids Won : ", bids);
             setBidsWonData(bids);
         } catch (error) {
             console.log(error);
@@ -167,35 +177,62 @@ const BidsWon = () => {
                                         <p>{bid.model_year}</p> | <p>{bid.mileage_km} Km</p> | <p>{bid.engine_capacity} cc</p>
                                     </div>
                                     <div className='w-full xl:w-[60%] flex flex-col md:flex-row lg:flex-row justify-center items-center gap-2'>
-                                        <div className='basis-1/3 flex flex-col justify-center items-center gap-2 lg:gap-0'>
-                                            <div className='font-medium text-xl'>Your Bid</div>
-                                            <div className='text-base'>${bid.accepted_bid.amount}</div>
-                                        </div>
-                                        {!bid.avail_lock && (confirmRequest || bid.buyer_avail_req ? (
-                                            <button
-                                                className='basis-[40%] bg-[#2FB500] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-6 py-2'
-                                            >
-                                                Change Requested
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => handleOpenFirst(bid.accepted_bid.vehicleId)}
-                                                className='basis-1/3 bg-[#FFA90A] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-6 py-2'
-                                            >
-                                                See Availability
-                                            </button>
-                                        ))}
                                         <button
-                                            onClick={handleOpenSecond}
-                                            className='basis-1/3 bg-black w-full lg:w-[32%] text-white font-bold rounded-[30px] px-4 py-2'>
-                                            Make Payment
+                                            className='bg-[#FFA90A] w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                                            Your Bid - ${bid.accepted_bid.amount}
                                         </button>
+                                        {bid.avail_lock === true && (
+                                            <button
+                                                className='bg-black w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                                                Availability Locked
+                                            </button>
+                                        )}
+
+                                        {bid.accepted_bid.payment === false || !bid.accepted_bid.payment ? (
+                                            <>
+                                                <button
+                                                    onClick={() => handleOpenSecond(bid.accepted_bid.vehicleId)}
+                                                    className=' bg-black w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                                                    Make Payment - $299
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {!bid.avail_lock && (confirmRequest || bid.buyer_avail_req ? (
+                                                    <button
+                                                        className='bg-[#2FB500] w-full text-white font-bold rounded-[30px] px-6 py-2'
+                                                    >
+                                                        Change Requested
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => handleOpenFirst(bid.accepted_bid.vehicleId)}
+                                                        className='bg-[#FFA90A] w-full text-white font-bold rounded-[30px] px-6 py-2'
+                                                    >
+                                                        See Availability
+                                                    </button>
+                                                ))}
+                                            </>
+                                        )}
+
                                     </div>
                                 </div>
+                                {/* Add Payment Message */}
+                                { bid?.accepted_bid?.payment === true ? (
+                                    <>
+                                        <div className='text-green-900 lg:text-end text-center'>
+                                            Your Payment is done
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
                 ))}
+
                 <Modal open={openFirst} onClose={handleCloseFirst}>
                     <Box sx={styleFirst}>
                         <div className='w-[95vw] lg:w-[50vw] relative flex flex-col justify-center items-center gap-6 py-8 lg:py-14 px-6 lg:px-14'>
@@ -287,45 +324,18 @@ const BidsWon = () => {
                                 <CloseIcon onClick={handleCloseSecond} />
                             </div>
                             <h1 className='font-bold text-xl' > Make Payment </h1>
-                            <div className='w-full flex flex-col justify-start items-start gap-3 cursor-pointer'>
-                                <Typography>
-                                    To proceed further to confirm availability date, you have to pay the platform commission fees
-                                </Typography>
-                                <Typography sx={{ mt: 1 }}>
-                                    Bid accepted: $24,500
-                                </Typography>
-                                <Typography sx={{ mb: 1 }}>
-                                    Commission: $240
-                                </Typography>
-                                <label htmlFor="date" className='font-semibold'> Select Payment Method </label>
-                                <TextField
-                                    id="paymentmethod"
-                                    type='text'
-                                    fullWidth
-                                />
-                                <label htmlFor="time" className='font-semibold'> Enter Card Details </label>
-                                <TextField
-                                    id="time"
-                                    type='text'
-                                    fullWidth
-                                />
-                                <label htmlFor="address" className='font-semibold'> Enter Amount </label>
-                                <TextField
-                                    id="address"
-                                    type='text'
-                                    fullWidth
-                                />
+                            <div className='w-full flex flex-col justify-center items-center gap-3 cursor-pointer'>
+
+                                < PayPalPayment currentUser={currentUser} adDocId={adDocId} handleCloseSecond={handleCloseSecond} />
+
                                 <div className='w-full h-auto flex flex-row justify-center items-center gap-3' >
                                     <button
                                         onClick={handleCloseSecond}
                                         className='bg-[#383838] w-full text-white font-bold rounded-xl mt-6 px-4 py-2'>
                                         Cancel
                                     </button>
-                                    <button
-                                        className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-4 py-2'>
-                                        Confirm
-                                    </button>
                                 </div>
+
                             </div>
                         </div>
                     </Box>
