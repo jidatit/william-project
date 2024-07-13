@@ -170,7 +170,7 @@ const BidsWon = () => {
                                 </div>
                                 <p className="lg:text-lg text-gray-500 text-base">{bid.description}</p>
                                 <p className="text-xl font-black text-gray-800">
-                                    <span className="text-[#FFA90A] text-base font-semibold">{bid.location}</span>
+                                    <span className="text-[#ffe001] text-base font-semibold">{bid.location}</span>
                                 </p>
                                 <div className='w-full flex flex-col xl:flex-row gap-3 lg:gap-4 xl:gap-0 xl:justify-between xl:items-center'>
                                     <div className='w-full xl:w-[40%] flex flex-row gap-[10px] lg:gap-[20px] justify-center lg:justify-start items-center'>
@@ -178,7 +178,7 @@ const BidsWon = () => {
                                     </div>
                                     <div className='w-full xl:w-[60%] flex flex-col md:flex-row lg:flex-row justify-center items-center gap-2'>
                                         <button
-                                            className='bg-[#FFA90A] w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                                            className='bg-[#ffe001] w-full text-white font-bold rounded-[30px] px-4 py-2'>
                                             Your Bid - ${bid.accepted_bid.amount}
                                         </button>
                                         {bid.avail_lock === true && (
@@ -207,7 +207,7 @@ const BidsWon = () => {
                                                 ) : (
                                                     <button
                                                         onClick={() => handleOpenFirst(bid.accepted_bid.vehicleId)}
-                                                        className='bg-[#FFA90A] w-full text-white font-bold rounded-[30px] px-6 py-2'
+                                                        className='bg-[#ffe001] w-full text-white font-bold rounded-[30px] px-6 py-2'
                                                     >
                                                         See Availability
                                                     </button>
@@ -281,7 +281,7 @@ const BidsWon = () => {
                                                 </button>
                                                 <button
                                                     onClick={lockAvailability}
-                                                    className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-4 py-2'>
+                                                    className='bg-[#ffe001] w-full text-white font-bold rounded-xl mt-6 px-4 py-2'>
                                                     Lock Availability
                                                 </button>
                                             </>
@@ -294,7 +294,7 @@ const BidsWon = () => {
                                                 </button>
                                                 <button
                                                     onClick={confirmAvailabilityRequest}
-                                                    className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-4 py-2'>
+                                                    className='bg-[#ffe001] w-full text-white font-bold rounded-xl mt-6 px-4 py-2'>
                                                     Confirm
                                                 </button>
                                             </>

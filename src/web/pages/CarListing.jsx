@@ -61,14 +61,14 @@ const CarListing = () => {
                         </div>
 
                         <div className='absolute top-2 lg:top-5 right-2 lg:right-10 w-auto h-auto flex flex-col justify-start items-start'>
-                            <h1 className='text-black text-xs lg:text-base font-bold'> Current Bid: <span className='text-[#FFA90A]' > $40000 </span> </h1>
+                            <h1 className='text-black text-xs lg:text-base font-bold'> Current Bid: <span className='text-[#ffe001]' > $40000 </span> </h1>
                             {carsData.map((car, index) => (
                                 <h1 key={index} className='text-black text-xs lg:text-base font-bold'> Ends In: <span className='text-[#008DF2]'>{calculateDaysLeft(car.date)} Days</span> </h1>
                             ))}
                         </div>
                         
                         <div className='absolute bottom-2 lg:bottom-5 right-2 lg:right-10 w-auto h-auto flex justify-center items-center'>
-                            <button className="bg-[#FFA90A] text-white font-bold py-2 px-4 rounded">
+                            <button className="bg-[#ffe001] text-white font-bold py-2 px-4 rounded">
                                 Bid Now
                             </button>
                         </div>

@@ -33,7 +33,7 @@ const SideNav = () => {
   return (
     <section className="flex">
       <div
-        className={` bg-[#FFA90A] min-h-screen shadow-md ${open ? "w-68" : " w-14 lg:w-[75px]"
+        className={` bg-[#ffe001] min-h-screen shadow-md ${open ? "w-68" : " w-14 lg:w-[75px]"
           } duration-500 text-gray-100 px-2 lg:px-4 py-1 sm:py-2 md:py-2 lg:py-4 xl:py-6 2xl:py-6`}
       >
         <div className="py-3 flex justify-center items-center">

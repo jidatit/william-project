@@ -300,7 +300,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                         <h3 className="font-bold text-gray-800 lg:text-2xl text-md">{data.model_name || "BMW E46"}</h3>
                         <p className="lg:text-lg text-gray-500 text-base"> {strTruncator(data.description, 200)} </p>
                         <p className="text-xl font-black text-gray-800">
-                            <span className="text-[#FFA90A] text-base font-semibold"> {data.location || "Location"}</span>
+                            <span className="text-[#ffe001] text-base font-semibold"> {data.location || "Location"}</span>
                         </p>
 
                         <div className='w-full flex flex-col xl:flex-row gap-3 lg:gap-4 xl:gap-0 xl:justify-between xl:items-center'>
@@ -318,7 +318,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                         {seeBids === false ? (
                                             <button
                                                 onClick={handleSeeBids}
-                                                className='bg-[#FFA90A] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
+                                                className='bg-[#ffe001] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-4 py-2'>
                                                 See Bids
                                             </button>
                                         ) : (
@@ -376,7 +376,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                             availabilityUpdated === false ? (
                                                 <button
                                                     onClick={handleOpenFirst}
-                                                    className='bg-[#FFA90A] w-full lg:w-[80%] text-white font-bold rounded-[30px] px-4 py-2'
+                                                    className='bg-[#ffe001] w-full lg:w-[80%] text-white font-bold rounded-[30px] px-4 py-2'
                                                 >
                                                     Add Vehicle Availability
                                                 </button>
@@ -393,7 +393,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                             <>
                                                 <button
                                                     onClick={handleopenthird}
-                                                    className='bg-[#FFA90A] w-full lg:w-[70%] text-white font-bold rounded-[30px] px-4 py-2'
+                                                    className='bg-[#ffe001] w-full lg:w-[70%] text-white font-bold rounded-[30px] px-4 py-2'
                                                 >
                                                     View
                                                 </button>
@@ -443,7 +443,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                     <div className=' text-base' > {bid["Bid Time"]} </div>
                                 </div>
                                 <div className='basis-2/5 flex justify-center items-center'>
-                                    <button disabled={isAccepting} onClick={() => handleAcceptBid(bid)} className='bg-[#FFA90A] w-auto text-white font-bold rounded-[30px] px-6 py-2'>
+                                    <button disabled={isAccepting} onClick={() => handleAcceptBid(bid)} className='bg-[#ffe001] w-auto text-white font-bold rounded-[30px] px-6 py-2'>
                                         Accept Bid
                                     </button>
                                 </div>
@@ -489,7 +489,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                 <TextField name="address" value={AvailabilityForm.address} onChange={handleAvailabilityFormChange} id="address" type='text' fullWidth />
                                 <button
                                     onClick={availabilityUpdate}
-                                    className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'>
+                                    className='bg-[#ffe001] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'>
                                     Upload Availability
                                 </button>
                             </div>
@@ -543,7 +543,7 @@ const AdCard = ({ data, onDelete, onUpdate, onFetch }) => {
                                 <div className='w-full flex gap-4'>
                                     <button
                                         onClick={handleRequestChange}
-                                        className='bg-[#FFA90A] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'
+                                        className='bg-[#ffe001] w-full text-white font-bold rounded-xl mt-6 px-6 py-3'
                                     >
                                         Request Change
                                     </button>

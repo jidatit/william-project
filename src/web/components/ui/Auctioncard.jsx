@@ -11,8 +11,8 @@ const Auctioncard = ({ image, model, category }) => {
                     <h3 className="text-lg font-medium mb-2">Model: {model || "Dacia Sandero"}</h3>
                     <p className="text-md mb-4">Category: {category || "Hybrid"}</p>
                     <div className="flex items-center justify-between">
-                        <span className="font-semibold text-sm text-[#FFA90A] underline">More info</span>
-                        <button className="bg-[#FFA90A] text-white font-bold py-2 px-4 rounded">
+                        <span className="font-semibold text-sm text-[#ffe001] underline">More info</span>
+                        <button className="bg-[#ffe001] text-white font-bold py-2 px-4 rounded">
                             Bid Now
                         </button>
                     </div>

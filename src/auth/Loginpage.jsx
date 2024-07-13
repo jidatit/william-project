@@ -32,7 +32,7 @@ const Loginpage = () => {
                         <TextField value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Password' className='w-full outline-none shadow-2xl' type='password' />
                     </div>
 
-                    <button onClick={handleLogin} className='w-[90%] md:w-[60%] py-3 rounded-[10px] bg-[#FFA90A] text-lg font-semibold text-white'>
+                    <button onClick={handleLogin} className='w-[90%] md:w-[60%] py-3 rounded-[10px] bg-[#ffe001] text-lg font-semibold text-white'>
                         Login
                     </button>
 

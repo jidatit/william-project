@@ -9,6 +9,7 @@ import icon2 from "../../assets/web/icon2.png"
 import icon3 from "../../assets/web/icon3.png"
 import StoriesSlider from "../components/slider"
 import FAQ from "../components/faq"
+import { Link } from 'react-router-dom'
 
 const Homepage = () => {
 
@@ -47,20 +48,20 @@ const Homepage = () => {
                     }}
                 >
                     <div className='lg:w-[60%] text-white flex flex-col justify-center items-center gap-5'>
-                        <h1 className='font-bold lg:text-[50px] md:text-[25px] text-[20px] text-center'>THE LEADING ONLINE CAR AUCTION FOR DEALERS AND SELLERS</h1>
-                        <p className='font-light lg:text-[25px] md:text-[20px] text-[15px] text-center'>Find the right price, dealer and advice</p>
+                        <h1 className='font-bold lg:text-[50px] md:text-[25px] text-[20px] text-center uppercase'>Get The Best Offer For Your Car Within 7 Days</h1>
+                        <p className='font-light lg:text-[25px] md:text-[20px] text-[15px] text-center'>The car auction site that puts you in control</p>
                         <div className='w-full flex flex-col md:flex-row justify-center items-center gap-5'>
-                            <button className='bg-transparent lg:text-[20px] text-[13px] py-2 px-2 md:w-[25%] w-[90%] font-semibold flex flex-col justify-center items-center border-[2px] border-[#FFA90A]'>
+                            <Link to="/car-listing" className='bg-transparent lg:text-[20px] text-[13px] py-2 px-2 md:w-[25%] w-[90%] font-semibold flex flex-col justify-center items-center border-[2px] border-[#ffe001]'>
                                 Buy Car
-                            </button>
-                            <button className='bg-[#FFA90A] lg:text-[20px] text-[13px] py-2 px-2 md:w-[25%] w-[90%] flex flex-col justify-center items-center border-[2px] border-[#FFA90A] font-semibold'>
+                            </Link>
+                            <Link to="/auth" className='bg-[#ffe001] lg:text-[20px] text-[13px] py-2 px-2 md:w-[25%] w-[90%] flex flex-col justify-center items-center border-[2px] border-[#ffe001] font-semibold'>
                                 Sell Car
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
 
-                <div className='w-[90%] shadow-lg mt-[-90px] px-5 pb-5 pt-10 bg-[#FFA90A] rounded-[20px] text-black flex flex-col justify-center items-center gap-5'>
+                {/* <div className='w-[90%] shadow-lg mt-[-90px] px-5 pb-5 pt-10 bg-[#ffe001] rounded-[20px] text-black flex flex-col justify-center items-center gap-5'>
                     <h2 className='text-center font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>Why Us?</h2>
                     <div className='w-full grid lg:grid-cols-3 grid-cols-1 justify-center items-center gap-5'>
                         <div className='w-full flex flex-col justify-center items-center gap-5'>
@@ -76,9 +77,9 @@ const Homepage = () => {
                             <p className='text-center font-semibold lg:text-[25px] md:text-[20px] text-[18px] mb-5'> Cars Sold </p>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
-                <div className='w-full flex mt-[70px] mb-[70px] flex-col gap-5 justify-center bg-white items-center'>
+                {/* <div className='w-full flex mt-[70px] mb-[70px] flex-col gap-5 justify-center bg-white items-center'>
                     <h2 className='text-center font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>Featured Listing Auction</h2>
                     <div className='w-full flex mt-[30px] flex-col px-10 justify-center bg-white items-center'>
                         <div className='w-full grid gap-2 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 flex-wrap'>
@@ -87,36 +88,39 @@ const Homepage = () => {
                             ))}
                         </div>
                     </div>
-                </div>
+                </div> */}
 
-                <div className='w-full px-5 py-5 bg-[#C8C8C8] flex flex-col justify-center items-center gap-5 text-black'>
-                    <h2 className='text-center mt-[20px] font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>3 Simple Steps To Bid Your Car</h2>
-                    <div className='w-full mt-[20px] mb-[20px] grid lg:grid-cols-3 grid-cols-1 justify-center items-center gap-5'>
+                <div className='w-full px-5 py-5 bg-black flex flex-col justify-center items-center gap-5 text-white'>
+                    <h2 className='text-center mt-[20px] font-semibold lg:text-[40px] md:text-[25px] text-[20px]'>3 Simple Steps To Sell Your Car</h2>
+                    <div className='w-full mt-[40px] mb-[20px] grid lg:grid-cols-3 grid-cols-1 justify-center items-start gap-5'>
                         <div className='w-full flex flex-col justify-center items-center gap-5'>
-                            <div className='p-[30px] rounded-[10px] bg-white flex flex-col justify-center items-center'>
+                            <div className='p-[30px] rounded-[10px] bg-[#ffe001] flex flex-col justify-center items-center w-full max-w-[110px]'>
                                 <img src={icon1} alt="" />
                             </div>
-                            <p className='text-center font-bold lg:text-[25px] md:text-[20px] text-[15px]'>Registration and Account</p>
-                            <p className='text-center font-light lg:text-[25px] md:text-[20px] text-[15px]'>Search inventory of more than salvage used vehicles. Aliquam sagittis pellentesque turpis egestas tincidunt. Integer mollis leo lectus.</p>
+                            <p className='text-center font-bold lg:text-[25px] md:text-[20px] text-[15px]'>Post Your Vehicle</p>
+                            <p className='text-center font-light lg:text-[22px] md:text-[20px] text-[15px]'>Create an account, answer a few questions and upload pictures of your vehicle. The more pictures the better!
+                            </p>
                         </div>
                         <div className='w-full flex flex-col justify-center items-center gap-5'>
-                            <div className='p-[30px] rounded-[10px] bg-white flex flex-col justify-center items-center'>
+                            <div className='p-[30px] rounded-[10px] bg-[#ffe001] flex flex-col justify-center items-center w-full max-w-[110px]'>
                                 <img src={icon2} alt="" />
                             </div>
-                            <p className='text-center font-bold lg:text-[25px] md:text-[20px] text-[15px]'>Browse and Select a Vehicle</p>
-                            <p className='text-center font-light lg:text-[25px] md:text-[20px] text-[15px]'>Search inventory of more than salvage used vehicles. Aliquam sagittis pellentesque turpis egestas tincidunt. Integer mollis leo lectus.</p>
+                            <p className='text-center font-bold lg:text-[25px] md:text-[20px] text-[15px]'>Watch The Bids Roll In</p>
+                            <p className='text-center font-light lg:text-[22px] md:text-[20px] text-[15px]'>Keep an eye on the bids coming in on your car. Our auctions go up to 7 days, but you’ll have the option to accept a bid early if you’d like
+                            .</p>
                         </div>
                         <div className='w-full flex flex-col justify-center items-center gap-5'>
-                            <div className='p-[30px] rounded-[10px] bg-white flex flex-col justify-center items-center'>
-                                <img src={icon3} alt="" />
+                            <div className='p-[30px] rounded-[10px] bg-[#ffe001] flex flex-col justify-center items-center w-full max-w-[110px]'>
+                                <img src={icon3} alt=""  />
                             </div>
-                            <p className='text-center font-bold lg:text-[25px] md:text-[20px] text-[15px]'>Place Bids and Monitor</p>
-                            <p className='text-center font-light lg:text-[25px] md:text-[20px] text-[15px]'>Search inventory of more than salvage used vehicles. Aliquam sagittis pellentesque turpis egestas tincidunt. Integer mollis leo lectus.</p>
+                            <p className='text-center font-bold lg:text-[25px] md:text-[20px] text-[15px]'>Accept an Offer and Meet
+                            </p>
+                            <p className='text-center font-light lg:text-[22px] md:text-[20px] text-[15px]'>Lastly, accept your highest bid and setup a meeting time with the buyer. They’ll either come pick your vehicle up or you can meet them at their office. You will receive cash or check, whatever you prefer.</p>
                         </div>
                     </div>
                 </div>
 
-                <div className='w-full bg-white mb-[50px] flex gap-5 flex-col justify-center items-center'>
+                {/* <div className='w-full bg-white mb-[50px] flex gap-5 flex-col justify-center items-center'>
                     <h2 className='text-center mt-[50px] font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>Deal Car Success Stories</h2>
                     <StoriesSlider />
                 </div>
@@ -124,7 +128,7 @@ const Homepage = () => {
                 <div className="w-full relative min-h-screen flex flex-col justify-center items-end bg-[#C8C8C8] mb-12 lg:mb-[50px] p-5 lg:p-10">
                     <img className="absolute h-full top-0 left-0 object-cover w-full lg:w-auto" src={seccar} alt="Car" />
                     <div className="relative lg:w-[50%] flex flex-col justify-center items-start gap-5 bg-white bg-opacity-70 p-5 lg:p-10 rounded-lg shadow-lg">
-                        <h2 className="text-[#FFA90A] font-semibold text-lg lg:text-[30px] md:text-[25px]">About Us</h2>
+                        <h2 className="text-[#ffe001] font-semibold text-lg lg:text-[30px] md:text-[25px]">About Us</h2>
                         <h2 className="font-bold md:leading-[50px] text-xl lg:text-[40px] md:text-[30px]">Revving The Future: Your Ultimate Auction Car Destination</h2>
                         <p className="font-semibold text-sm lg:text-base">Lorem ipsum dolor sit amet consectetur. Gravida mi mauris arcu sed. Adipiscing mollis velit lacus posuere varius leo. Pellentesque tincidunt convallis pretium duis eu pretium sagittis nunc velit. Ullamcorper phasellus nisl mauris cras euismod.</p>
                         <ul className="list-disc pl-5">
@@ -145,14 +149,14 @@ const Homepage = () => {
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> */}
 
-                <div className='w-full flex flex-col justify-center items-center gap-5'>
+                {/* <div className='w-full flex flex-col justify-center items-center gap-5'>
                     <h2 className='text-center mt-[30px] mb-[10px] font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>FAQs About Selling Cars</h2>
                     <div className='md:w-[70%] w-[90%] mb-[30px] flex flex-col justify-center items-center'>
                         <FAQ />
                     </div>
-                </div>
+                </div> */}
 
             </div>
         </>

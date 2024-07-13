@@ -81,7 +81,7 @@ const EditProfile = () => {
                 <ToastContainer />
                 <div className='w-[85%] lg:w-[70%] mb-10 relative flex flex-row justify-center items-center' >
                     <div className='font-semibold text-2xl' > Edit Profile </div>
-                    <button className='cursor-pointer absolute right-0 text-[#FFA90A] hover:text-black' onClick={() => setIsEditing(!isEditing)}>
+                    <button className='cursor-pointer absolute right-0 text-[#ffe001] hover:text-black' onClick={() => setIsEditing(!isEditing)}>
                         {isEditing ? <EditOffOutlinedIcon sx={{ fontSize: '40px' }} /> : <CreateOutlinedIcon sx={{ fontSize: '40px' }} />}
                     </button>
                 </div>
@@ -139,7 +139,7 @@ const EditProfile = () => {
                     />
                     {isEditing && (
                         <button
-                            className='lg:w-[30%] w-full rounded-xl cursor-pointer bg-[#FFA90A] text-white font-semibold mt-6 p-3'
+                            className='lg:w-[30%] w-full rounded-xl cursor-pointer bg-[#ffe001] text-white font-semibold mt-6 p-3'
                             type='submit'
                         >
                             {isUpdating ? 'Updating' : 'Update'}

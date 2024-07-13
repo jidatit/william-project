@@ -18,7 +18,7 @@ const OngoingBids = () => {
             <h3 className="font-bold text-gray-800 lg:text-2xl text-md">BMW E46</h3>
             <p className="lg:text-lg text-gray-500 text-base"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo adipisci accusamus ullam consequatur, sit odio, earum, dolor quam quaerat voluptates expedita. Aliquam rerum ut perferendis tenetur, totam aperiam. Aliquid, reprehenderit.</p>
             <p className="text-xl font-black text-gray-800">
-              <span className="text-[#FFA90A] text-base font-semibold"> Islamabad</span>
+              <span className="text-[#ffe001] text-base font-semibold"> Islamabad</span>
             </p>
 
             <div className='w-full flex flex-col xl:flex-row gap-3 lg:gap-4 xl:gap-0 xl:justify-between xl:items-center'>
@@ -41,7 +41,7 @@ const OngoingBids = () => {
                   <div className=' text-base' > $23000 </div>
                 </div>
                 <button
-                  className='basis-1/4 bg-[#FFA90A] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-6 py-2'>
+                  className='basis-1/4 bg-[#ffe001] lg:w-[32%] w-full text-white font-bold rounded-[30px] px-6 py-2'>
                   Bid More
                 </button>
                 <button

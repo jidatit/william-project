@@ -17,7 +17,7 @@ const AdminLogin = () => {
 
     return (
         <>
-            <div className="min-h-screen bg-[#FFA90A] w-full flex flex-col items-center justify-center py-6 px-4">
+            <div className="min-h-screen bg-[#ffe001] w-full flex flex-col items-center justify-center py-6 px-4">
                 <div className="md:w-[40%] w-[90%] border py-8 px-6 rounded border-gray-300 bg-white">
                     <img src={logo} alt="logo" className='w-40 mb-10' />
 

@@ -21,10 +21,10 @@ const Header = () => {
                         {!currentUser ? (
                             <>
                                 <Link className='w-full' to="/auth/signup">
-                                    <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Signup</button>
+                                    <button className="text-white flex flex-col justify-center items-center bg-[#ffe001] outline-none font-medium rounded-lg text-sm px-4 py-2">Signup</button>
                                 </Link>
                                 <Link className='w-full' to="/auth">
-                                    <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Login</button>
+                                    <button className="text-white flex flex-col justify-center items-center bg-[#ffe001] outline-none font-medium rounded-lg text-sm px-4 py-2">Login</button>
                                 </Link>
                             </>
                         ) : (
@@ -38,7 +38,7 @@ const Header = () => {
                             ) : (
                                 <>
                                     <Link className='w-full' to="/admin_portal">
-                                        <button className="text-white flex flex-col justify-center items-center bg-[#FFA90A] outline-none font-medium rounded-lg text-sm px-4 py-2">Admin Portal</button>
+                                        <button className="text-white flex flex-col justify-center items-center bg-[#ffe001] outline-none font-medium rounded-lg text-sm px-4 py-2">Admin Portal</button>
                                     </Link>
                                     <button className='text-white flex flex-col justify-center items-center bg-red-700 outline-none font-medium rounded-lg text-sm px-4 py-2' onClick={logout}>logout</button>
                                 </>
@@ -63,13 +63,15 @@ const Header = () => {
                             </Link>
                             <Link to="/car-listing">
                                 <li>
-                                    <p className="block py-2 px-3 md:p-0 text-white  rounded md:bg-transparent">Listing</p>
+                                    <p className="block py-2 px-3 md:p-0 text-white  rounded md:bg-transparent">Buy Car</p>
                                 </li>
                             </Link>
                             <li>
-                                <p className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Sell Car</p>
+                                <Link to="/auth">
+                                    <p className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Sell Car</p>
+                                </Link>
                             </li>
-                            <li>
+                            {/* <li>
                                 <p className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Bid Model</p>
                             </li>
                             <li>
@@ -77,7 +79,7 @@ const Header = () => {
                             </li>
                             <li>
                                 <p className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact Us</p>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>)}
                 </div>

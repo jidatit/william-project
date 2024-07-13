@@ -85,7 +85,7 @@ const ChangePassword = () => {
                         fullWidth
                     />
                     <button
-                        className='lg:w-[30%] w-full rounded-xl cursor-pointer bg-[#FFA90A] text-white font-semibold p-3'
+                        className='lg:w-[30%] w-full rounded-xl cursor-pointer bg-[#ffe001] text-white font-semibold p-3'
                         onClick={handleSubmit}
                     >
                         {isUpdating ? 'Updating' : 'Update Password'}

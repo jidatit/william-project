@@ -3,8 +3,8 @@ import React from 'react'
 const Storiescard = ({ image, say }) => {
     return (
         <>
-            <div className="bg-[#FFA90A] rounded-[20px] overflow-hidden shadow-lg w-[100%] lg:max-w-sm">
-                <div className="p-2 bg-[#FFA90A]">
+            <div className="bg-[#ffe001] rounded-[20px] overflow-hidden shadow-lg w-[100%] lg:max-w-sm">
+                <div className="p-2 bg-[#ffe001]">
                     <img className="w-full rounded-[20px]" src={image || "https://images.unsplash.com/photo-1523275335684-37898b6baf30"} alt="Product Image" />
                 </div>
                 <div className="p-4">

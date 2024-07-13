@@ -112,7 +112,7 @@ const Signuppage = () => {
 
                     {passwordError && <p className="text-red-500">{passwordError}</p>}
 
-                    <button onClick={handleSignup} className='w-[90%] md:w-[60%] py-3 rounded-[10px] bg-[#FFA90A] text-lg font-semibold text-white'>
+                    <button onClick={handleSignup} className='w-[90%] md:w-[60%] py-3 rounded-[10px] bg-[#ffe001] text-lg font-semibold text-white'>
                         Sign Up
                     </button>
 

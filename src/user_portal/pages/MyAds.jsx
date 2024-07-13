@@ -307,17 +307,17 @@ const MyAds = () => {
             <div className='w-[80%] min-h-screen flex flex-col justify-start items-center'>
                 <ToastContainer />
                 <div className='w-full mt-[20px] mb-[20px] flex flex-col justify-center items-start'>
-                    <div onClick={CreateHandleOpen} className='lg:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#FFA90A] hover:text-white rounded-[30px] border-[2px] border-[#FFA90A] text-[#FFA90A] font-semibold p-3'>
+                    <div onClick={CreateHandleOpen} className='lg:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#ffe001] hover:text-white rounded-[30px] border-[2px] border-[#ffe001] text-[#ffe001] font-semibold p-3'>
                         <p className='text-center'>Create an Ad</p>
                     </div>
                 </div>
 
                 <div className='w-full mt-[20px] mb-[20px] flex flex-col justify-center items-center'>
                     <div className='flex w-full flex-col lg:flex-row gap-2'>
-                        <div className='lg:w-[20%] w-full rounded-[30px] cursor-pointer bg-[#FFA90A] text-white font-semibold p-3'>
+                        <div className='lg:w-[20%] w-full rounded-[30px] cursor-pointer bg-[#ffe001] text-white font-semibold p-3'>
                             <p className='text-center'>Active</p>
                         </div>
-                        <div className='lg:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#FFA90A] hover:text-white rounded-[30px] border-[2px] border-[#FFA90A] text-[#FFA90A] font-semibold p-3'>
+                        <div className='lg:w-[20%] w-full transition-all ease-in-out delay-150 cursor-pointer hover:bg-[#ffe001] hover:text-white rounded-[30px] border-[2px] border-[#ffe001] text-[#ffe001] font-semibold p-3'>
                             <p className='text-center'>Removed</p>
                         </div>
                     </div>

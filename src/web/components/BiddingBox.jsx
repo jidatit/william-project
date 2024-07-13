@@ -139,7 +139,7 @@ const BiddingBox = ({ vehicleId, carData }) => {
                     ) : (
                         <>
                             <TextField type='number' disabled={Loading} value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} className='w-full md:w-[70%] outline-none focus:outline-none' placeholder='Type amount of your bid here!' />
-                            <button onClick={() => handleMakeBid(parseFloat(bidAmount))} type="button" className="focus:outline-none text-white md:w-[30%] w-full md:h-full bg-[#FFA90A] hover:bg-yellow-500 focus:ring-yellow-300 font-medium text-sm px-5 py-2.5">
+                            <button onClick={() => handleMakeBid(parseFloat(bidAmount))} type="button" className="focus:outline-none text-white md:w-[30%] w-full md:h-full bg-[#ffe001] hover:bg-yellow-500 focus:ring-yellow-300 font-medium text-sm px-5 py-2.5">
                                 {Loading ? (
                                     <BeatLoader
                                         color={"#000000"}
