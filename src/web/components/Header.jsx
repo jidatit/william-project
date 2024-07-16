@@ -63,12 +63,12 @@ const Header = () => {
                             </Link>
                             <Link to="/car-listing">
                                 <li>
-                                    <p className="block py-2 px-3 md:p-0 text-white  rounded md:bg-transparent">Buy Car</p>
+                                    <p className="block py-2 px-3 md:p-0 text-white  rounded md:bg-transparent">For Dealers</p>
                                 </li>
                             </Link>
                             <li>
                                 <Link to="/auth">
-                                    <p className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Sell Car</p>
+                                    <p className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">For Sellers</p>
                                 </Link>
                             </li>
                             {/* <li>
