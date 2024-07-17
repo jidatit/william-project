@@ -52,10 +52,10 @@ const Homepage = () => {
                         <p className='font-light lg:text-[25px] md:text-[20px] text-[15px] text-center'>The car auction site that puts you in control</p>
                         <div className='w-full flex flex-col md:flex-row justify-center items-center gap-5'>
                             <Link to="/car-listing" className='bg-transparent lg:text-[20px] text-[13px] py-2 px-2 md:w-[25%] w-[90%] font-semibold flex flex-col justify-center items-center border-[2px] border-[#ffe001]'>
-                                Buy Car
+                                For Dealers
                             </Link>
                             <Link to="/auth" className='bg-[#ffe001] lg:text-[20px] text-[13px] py-2 px-2 md:w-[25%] w-[90%] flex flex-col justify-center items-center border-[2px] border-[#ffe001] font-semibold'>
-                                Sell Car
+                                For Sellers
                             </Link>
                         </div>
                     </div>
