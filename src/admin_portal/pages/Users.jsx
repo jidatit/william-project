@@ -37,6 +37,7 @@ const Users = () => {
 	const [createButtonText, setCreateButtonText] = useState("Create");
 	const [adToUpdate, setAdToUpdate] = useState(null);
 	const [userId, setUserId] = useState();
+	const [selectedUser, setSelectedUser] = useState();
 
 	const [formData, setformData] = useState({
 		name: "",
@@ -71,6 +72,7 @@ const Users = () => {
 				...adFormData,
 				images: fileUrls.map((url) => ({ file: url })),
 				user: {
+					...selectedUser,
 					uid: userId,
 				},
 				date: new Date().toISOString(),
@@ -205,8 +207,9 @@ const Users = () => {
 		fetchInvitedUsers();
 		fetchUsers();
 	}, []);
-	const CreateHandleOpen = (userId) => {
-		setUserId(userId);
+	const CreateHandleOpen = (userData) => {
+		setUserId(userData.id);
+		setSelectedUser(userData);
 		resetFormData();
 		setCreateButtonText("Create");
 		setAdToUpdate(null);
@@ -263,7 +266,7 @@ const Users = () => {
 						/>
 						<button
 							onClick={() => {
-								CreateHandleOpen(cell.row.original.id);
+								CreateHandleOpen(cell.row.original);
 							}}
 							type="button"
 							className="bg-[#ffe001] text-white rounded-lg py-2 px-6 hover:scale-105 transition-transform duration-200"
