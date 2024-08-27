@@ -43,6 +43,7 @@ function App() {
 					<Route path="/admin_portal" element={<AdminLayout />}>
 						<Route index element={<Users />} />
 						<Route path="logout" element={<Logout />} />
+						<Route path="change-password" element={<ChangePassword />} />
 					</Route>
 
 					<Route path="/user_portal" element={<UserLayout />}>

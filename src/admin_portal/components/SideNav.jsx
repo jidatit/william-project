@@ -9,6 +9,11 @@ const SideNav = () => {
 		{ name: "Back to website", link: "/", icon: FaUser },
 		{ name: "Users", link: "/admin_portal", icon: FaUser },
 		{ name: "Logout", link: "/admin_portal/logout", icon: FiLogOut },
+		{
+			name: "Change Password",
+			link: "/admin_portal/change-password",
+			icon: FiLogOut,
+		},
 	];
 
 	const [open, setOpen] = useState(true);
@@ -59,7 +64,13 @@ const SideNav = () => {
 						<Link
 							to={menu?.link}
 							key={i}
-							className={`group flex items-center text-base gap-2 font-poppins ${open && "py-2 pl-2 pr-4"} ${location.pathname === menu?.link ? "bg-[rgba(112,127,221,0.1) text-[#ffffff] bg-[#484a55] rounded-md" : "text-white"} hover:bg-[rgba(112,127,221,0.1)] hover:text-[#FFFFFF] rounded-md`}
+							className={`group flex items-center text-base gap-2 font-poppins ${
+								open && "py-2 pl-2 pr-4"
+							} ${
+								location.pathname === menu?.link
+									? "bg-[rgba(112,127,221,0.1) text-[#ffffff] bg-[#484a55] rounded-md"
+									: "text-white"
+							} hover:bg-[rgba(112,127,221,0.1)] hover:text-[#FFFFFF] rounded-md`}
 						>
 							<div className="p-2 lg:p-3 rounded-md text-[#ffffff]">
 								{React.createElement(menu?.icon, { size: "20" })}
@@ -68,12 +79,16 @@ const SideNav = () => {
 								style={{
 									transitionDelay: `${i + 2}00ms`,
 								}}
-								className={`whitespace-pre duration-200 ${!open && "opacity-0 translate-x-28 overflow-hidden"}`}
+								className={`whitespace-pre duration-200 ${
+									!open && "opacity-0 translate-x-28 overflow-hidden"
+								}`}
 							>
 								{menu?.name}
 							</h2>
 							<h2
-								className={`${open && "hidden"} absolute left-48 bg-white font-poppins whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
+								className={`${
+									open && "hidden"
+								} absolute left-48 bg-white font-poppins whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
 							>
 								{menu?.name}
 							</h2>

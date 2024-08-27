@@ -2,7 +2,6 @@ const Auctioncard = ({ image, model, category }) => {
 	return (
 		<div className="bg-white mb-2 hover:scale-105 transition-all rounded-[20px] overflow-hidden shadow-lg w-full lg:max-w-sm flex flex-col">
 			<div className="relative w-full h-48">
-				{" "}
 				<img
 					className="object-cover w-full h-full"
 					src={
@@ -13,10 +12,12 @@ const Auctioncard = ({ image, model, category }) => {
 				/>
 			</div>
 			<div className="p-4 flex-grow">
-				<h3 className="text-lg font-medium mb-2">
+				<h3 className="text-lg font-medium mb-2 truncate">
 					Model: {model || "Dacia Sandero"}
 				</h3>
-				<p className="text-md mb-4">Category: {category || "Hybrid"}</p>
+				<p className="text-md mb-4 truncate">
+					Category: {category || "Hybrid"}
+				</p>
 				<div className="flex items-center justify-between">
 					<span className="font-semibold text-sm text-[#ffe001] underline">
 						More info

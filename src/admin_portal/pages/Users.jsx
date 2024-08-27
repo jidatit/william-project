@@ -269,7 +269,7 @@ const Users = () => {
 								CreateHandleOpen(cell.row.original);
 							}}
 							type="button"
-							className="bg-[#ffe001] text-white rounded-lg py-2 px-6 hover:scale-105 transition-transform duration-200"
+							className="bg-[#ffe001] text-white rounded-lg py-1 px-4 sm:py-2 sm:px-6 hover:scale-105 transition-transform duration-200"
 						>
 							Add a new add
 						</button>
