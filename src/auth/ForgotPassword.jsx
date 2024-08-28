@@ -54,7 +54,7 @@ const ForgotPassword = () => {
       await sendPasswordResetEmail(auth, email);
       toast.success("Check your email account for reset instructions.");
       setTimeout(() => {
-        navigate("/signIn");
+        navigate("/auth");
       }, 5000);
     } catch (err) {
       console.error("Error resetting password:", err);
@@ -87,7 +87,7 @@ const ForgotPassword = () => {
                 Remember your password?
                 <Link
                   className="font-medium text-black decoration-2 hover:underline"
-                  to={"/"}
+                  to={"/auth"}
                 >
                   Login here
                 </Link>
