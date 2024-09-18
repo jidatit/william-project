@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../db";
+import { toast } from "react-toastify";
 
 const Loginpage = () => {
   const navigate = useNavigate();
@@ -14,8 +15,9 @@ const Loginpage = () => {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success("logged in successfully");
     } catch (error) {
-      console.error("Error signing in:", error.message);
+      toast.error(`Error signing in:${error.message}`);
     }
   };
   return (
