@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Auctioncard from "../components/ui/Auctioncard";
 import BidDetails from "./BidDetails";
 import CarPictures from "./CarPictures";
@@ -17,6 +17,8 @@ import { collection, getDocs } from "firebase/firestore";
 import CarDealershipContact from "../components/ContactForm";
 const CarDetails = () => {
   const { id } = useParams();
+  const location = useLocation(); // Get the state passed via Link
+  const model_name = location.state?.model_name || "Unknown Model";
   let [carData, setCarData] = useState({});
   const [carsData, setCarsData] = useState([]);
   const [recentCarsData, setRecentCarsData] = useState([]);
@@ -31,7 +33,6 @@ const CarDetails = () => {
 
     // return recentAds;
     setRecentCarsData(recentAds);
-    console.log("recent", recentAds);
   };
   const fetchAds = async () => {
     try {
@@ -77,7 +78,7 @@ const CarDetails = () => {
   return (
     <div className="w-full flex flex-col justify-center items-center my-5 lg:my-10 px-[20px] lg:px-[50px]">
       <CarPictures />
-      <CarDealershipContact />
+      <CarDealershipContact carName={model_name} />
       <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-10 gap-5 justify-center items-start my-4">
         <div className="w-full h-full col-span-6">
           <BidDetails />
@@ -163,7 +164,11 @@ const CarDetails = () => {
           </div>
           <div className="w-full h-full grid gap-2 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 flex-wrap cursor-pointer">
             {recentCarsData?.map((car, index) => (
-              <Link key={index} to={`/car-details/${car.id}`}>
+              <Link
+                key={index}
+                to={`/car-details/${car.id}`}
+                state={{ model_name: car.model_name }}
+              >
                 <Auctioncard
                   key={index}
                   image={car.images[0].file}

@@ -14,7 +14,7 @@ import {
   Alert,
 } from "@mui/material";
 
-const CarDealershipContact = () => {
+const CarDealershipContact = ({ carName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formType, setFormType] = useState("");
   const [status, setStatus] = useState({ message: "", isError: false });
@@ -31,7 +31,7 @@ const CarDealershipContact = () => {
     if (formType === "offer") {
       setFormData((prev) => ({
         ...prev,
-        subject: "Make an offer - Vehicle name", // You can dynamically replace "Vehicle name" with actual vehicle info
+        subject: `Make an offer - ${carName}`, // You can dynamically replace "Vehicle name" with actual vehicle info
       }));
     } else if (formType === "contact") {
       setFormData((prev) => ({

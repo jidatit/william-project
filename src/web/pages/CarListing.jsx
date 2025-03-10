@@ -1,55 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import Auctioncard from '../components/ui/Auctioncard';
+import React, { useState, useEffect } from "react";
+import Auctioncard from "../components/ui/Auctioncard";
 
-import ListingBannar from './../../assets/web/listingbannar.png'
-import BannarTag from './../../assets/web/bannartag.png'
+import ListingBannar from "./../../assets/web/listingbannar.png";
+import BannarTag from "./../../assets/web/bannartag.png";
 
-import { Link } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../db'
+import { Link } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../db";
 
 const CarListing = () => {
+  const [carsData, setCarsData] = useState([]);
 
-    const [carsData, setCarsData] = useState([]);
+  const fetchAds = async () => {
+    try {
+      const Adsref = collection(db, "Ads");
+      const querySnapshot = await getDocs(Adsref);
+      const adsData = [];
 
-    const fetchAds = async () => {
-        try {
-            const Adsref = collection(db, 'Ads');
-            const querySnapshot = await getDocs(Adsref);
-            const adsData = [];
-
-            querySnapshot.forEach((doc) => {
-                const data = { id: doc.id, ...doc.data() };
-                if (data.status !== "sold") {
-                    adsData.push(data);
-                }
-            });
-
-            setCarsData(adsData);
-        } catch (error) {
-            console.error('Error fetching ads:', error);
+      querySnapshot.forEach((doc) => {
+        const data = { id: doc.id, ...doc.data() };
+        if (data.status !== "sold") {
+          adsData.push(data);
         }
-    };
+      });
 
-    const calculateDaysLeft = (postDate) => {
-        const oneDay = 24 * 60 * 60 * 1000;
-        const currentDate = new Date();
-        const post = new Date(postDate);
-        const diffDays = Math.round(Math.abs((currentDate - post) / oneDay));
-        const daysLeft = 7 - diffDays;
-        return daysLeft;
-    };
+      setCarsData(adsData);
+    } catch (error) {
+      console.error("Error fetching ads:", error);
+    }
+  };
 
+  const calculateDaysLeft = (postDate) => {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const currentDate = new Date();
+    const post = new Date(postDate);
+    const diffDays = Math.round(Math.abs((currentDate - post) / oneDay));
+    const daysLeft = 7 - diffDays;
+    return daysLeft;
+  };
 
-    useEffect(() => {
-        fetchAds();
-    }, []);
+  useEffect(() => {
+    fetchAds();
+  }, []);
 
-    return (
-        <>
-            <div className={`w-full flex flex-col justify-center items-center ${carsData.length === 0 ? 'min-h-screen' : ''} `}>
-
-                {/* <div className='w-full mt-[50px] mb-[25px] flex flex-col gap-5 justify-center bg-white items-center'>
+  return (
+    <div
+      className={`w-full flex flex-col justify-center items-center ${
+        carsData.length === 0 ? "min-h-screen" : ""
+      } `}
+    >
+      {/* <div className='w-full mt-[50px] mb-[25px] flex flex-col gap-5 justify-center bg-white items-center'>
                     <div className='relative w-auto h-auto m-0'>
                         <img src={ListingBannar} alt="Car Image" className='w-auto lg:w-full h-auto lg:h-full m-0' />
                         
@@ -80,28 +80,45 @@ const CarListing = () => {
                     </div>
                 </div> */}
 
-                <div className='w-full mt-[25px] mb-[50px] flex flex-col gap-5 justify-center bg-white items-center'>
-                    <h2 className='text-center font-semibold lg:text-[30px] md:text-[25px] text-[20px]'>Featured Listing Auction</h2>
-                    {(carsData.length === 0) && (
-                        <>
-                            <div className='text-2xl text-gray-500 text-center w-full'>No Listings available</div>
-                            <Link to="/" className=' underline italic'>Go to Home</Link>
-                        </>
-                    )}
-                    <div className='w-full flex mt-[30px] flex-col px-10 lg:px-[100px] justify-center bg-white items-center'>
-                        <div className='w-full grid gap-2 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 flex-wrap'>
-                            {carsData.map((car, index) => (
-                                <Link key={index} to={`/car-details/${car.id}`}>
-                                    <Auctioncard image={car.images.length > 0 ? car.images[0].file : placeholderImage} model={car.model_name} category={car.engine_type} date={car.date} />
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
+      <div className="w-full mt-[25px] mb-[50px] flex flex-col gap-5 justify-center bg-white items-center">
+        <h2 className="text-center font-semibold lg:text-[30px] md:text-[25px] text-[20px]">
+          Featured Listing Auction
+        </h2>
+        {carsData.length === 0 && (
+          <>
+            <div className="text-2xl text-gray-500 text-center w-full">
+              No Listings available
             </div>
-        </>
-    );
+            <Link to="/" className=" underline italic">
+              Go to Home
+            </Link>
+          </>
+        )}
+        <div className="w-full flex mt-[30px] flex-col px-10 lg:px-[100px] justify-center bg-white items-center">
+          <div className="w-full grid gap-2 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 flex-wrap">
+            {carsData.map((car, index) => (
+              <Link
+                key={index}
+                to={`/car-details/${car.id}`}
+                state={{ model_name: car.model_name }}
+              >
+                <Auctioncard
+                  image={
+                    car.images.length > 0
+                      ? car.images[0].file
+                      : placeholderImage
+                  }
+                  model={car.model_name}
+                  category={car.engine_type}
+                  date={car.date}
+                />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default CarListing;
